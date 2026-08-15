@@ -428,7 +428,7 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
   </div>
 
   <div class="misbaha">
-    <div class="misbaha-label"><span id="progress-count">0 / 17</span> completed today</div>
+    <div class="misbaha-label"><span id="progress-count">0 / 27</span> completed today</div>
     <div class="beads" id="beads"></div>
   </div>
 
@@ -451,6 +451,60 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
 
   /* ---------- content ---------- */
   var SRC = "حصن المسلم";
+  var SRC_GENERAL = "أذكار مأثورة";
+
+  var general = [
+    {ar:"التهليل (١٠٠ مرة)", en:"The Testimony of Oneness, said 100 times", item:{
+      ar:"لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+      translit:"Lā ilāha illallāhu waḥdahū lā sharīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli shay’in qadīr.",
+      en:"There is no god but Allah alone, without partner. His is the dominion, His is the praise, and He is capable of all things.",
+      target:100}},
+    {ar:"اللهم إنك عفو", en:"O Allah, You Are Pardoning", item:{
+      ar:"اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+      translit:"Allāhumma innaka ‘afuwwun tuḥibbul-‘afwa fa‘fu ‘annī.",
+      en:"O Allah, You are Pardoning and You love to pardon, so pardon me.",
+      target:100}},
+    {ar:"دعاء يونس عليه السلام", en:"The Supplication of Yunus, peace be upon him", item:{
+      ar:"لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+      translit:"Lā ilāha illā anta subḥānaka innī kuntu minaẓ-ẓālimīn.",
+      en:"There is no god but You, glory be to You; indeed I have been among the wrongdoers.",
+      target:100}},
+    {ar:"الصلاة على النبي ﷺ", en:"Blessings upon the Prophet", item:{
+      ar:"اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ",
+      translit:"Allāhumma ṣalli ‘alā Muḥammad.",
+      en:"O Allah, send blessings upon Muhammad.",
+      target:100}},
+    {ar:"التسبيح", en:"Glory to the Sovereign", item:{
+      ar:"سُبْحَانَ الْمَلِكِ الْقُدُّوسِ",
+      translit:"Subḥānal-Malikil-Quddūs.",
+      en:"Glory be to the Sovereign, the Most Holy.",
+      target:10}},
+    {ar:"التكبير", en:"Takbir", item:{
+      ar:"اللَّهُ أَكْبَرُ",
+      translit:"Allāhu akbar.",
+      en:"Allah is the Greatest.",
+      target:10}},
+    {ar:"التحميد", en:"Tahmid", item:{
+      ar:"الْحَمْدُ لِلَّهِ",
+      translit:"Al-ḥamdu lillāh.",
+      en:"All praise is for Allah.",
+      target:10}},
+    {ar:"الاستغفار", en:"Istighfar", item:{
+      ar:"أَسْتَغْفِرُ اللَّهَ",
+      translit:"Astaghfirullāh.",
+      en:"I seek Allah's forgiveness.",
+      target:10}},
+    {ar:"كلمة التوحيد", en:"The Word of Oneness", item:{
+      ar:"لَا إِلَٰهَ إِلَّا اللَّهُ",
+      translit:"Lā ilāha illallāh.",
+      en:"There is no god but Allah.",
+      target:10}},
+    {ar:"الاستعاذة من الضيق", en:"Refuge from Distress", item:{
+      ar:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ ضِيقِ الدُّنْيَا وَضِيقِ يَوْمِ الْقِيَامَةِ",
+      translit:"Allāhumma innī a‘ūdhu bika min ḍīqid-dunyā wa ḍīqi yawmil-qiyāmah.",
+      en:"O Allah, I seek refuge in You from the distress of this world and the distress of the Day of Resurrection.",
+      target:10}}
+  ];
 
   var morning = [
     {id:"m1", ar:"آية الكرسي", en:"Ayat al-Kursi", items:[{
@@ -580,6 +634,11 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
     {id:"e17", ar:"التسبيح والاستغفار", en:"Closing tasbih", items: morning[16].items}
   ];
 
+  general.forEach(function(g, idx){
+    morning.push({id:"m-g" + (idx + 1), ar:g.ar, en:g.en, src:SRC_GENERAL, items:[g.item]});
+    evening.push({id:"e-g" + (idx + 1), ar:g.ar, en:g.en, src:SRC_GENERAL, items:[g.item]});
+  });
+
   var DATA = {morning: morning, evening: evening};
 
   /* ---------- state ---------- */
@@ -656,7 +715,7 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
       head.innerHTML =
         '<div class="card-num">' + String(idx+1).padStart(2,"0") + '</div>' +
         '<div class="card-titles"><div class="card-title-ar">' + card.ar + '</div><div class="card-title-en">' + card.en + '</div></div>' +
-        '<div class="card-source">' + SRC + '</div>' +
+        '<div class="card-source">' + (card.src || SRC) + '</div>' +
         '<div class="check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>';
       el.appendChild(head);
 
