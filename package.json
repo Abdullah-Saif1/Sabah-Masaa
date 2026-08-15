@@ -1,0 +1,15 @@
+{
+  "name": "sabah-masaa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Morning and evening Islamic adhkar app with cross-device sync via MongoDB.",
+  "scripts": {
+    "dev": "vercel dev",
+    "gen-icons": "node scripts/gen-icons.js",
+    "build-html": "node scripts/build.js",
+    "init-db": "node scripts/init-db.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.9.0"
+  }
+}
