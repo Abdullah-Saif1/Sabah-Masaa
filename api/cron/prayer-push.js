@@ -1,0 +1,108 @@
+// GET /api/cron/prayer-push
+// Pinged every minute by an external scheduler (Vercel Hobby only allows
+// daily cron, so this is triggered from outside — see .github/workflows).
+// For every push subscription, computes today's prayer times server-side
+// and sends a push for any enabled prayer whose time is "now" (within a
+// one-minute window), skipping ones already sent today.
+const { getDb } = require("../../lib/mongodb");
+const { webpush, ensureConfigured } = require("../../lib/webpush");
+const { PRAYER_KEYS } = require("../../lib/prayer-shared");
+const Adhan = require("adhan");
+
+const PRAYER_LABELS = {
+  fajr: { ar: "الفجر", en: "Fajr" },
+  dhuhr: { ar: "الظهر", en: "Dhuhr" },
+  asr: { ar: "العصر", en: "Asr" },
+  maghrib: { ar: "المغرب", en: "Maghrib" },
+  isha: { ar: "العشاء", en: "Isha" },
+};
+
+function todayUTC() {
+  const d = new Date();
+  return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
+}
+
+function buildParams(calcMethod, madhab) {
+  const factory = Adhan.CalculationMethod[calcMethod] || Adhan.CalculationMethod.MuslimWorldLeague;
+  const params = factory();
+  params.madhab = madhab === "hanafi" ? Adhan.Madhab.Hanafi : Adhan.Madhab.Shafi;
+  return params;
+}
+
+module.exports = async (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+
+  const auth = req.headers.authorization || "";
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  try {
+    ensureConfigured();
+  } catch (e) {
+    res.status(500).json({ error: "Push not configured" });
+    return;
+  }
+
+  const now = Date.now();
+  const today = todayUTC();
+  let checked = 0, sent = 0, removed = 0, errors = 0;
+
+  try {
+    const db = await getDb();
+    const col = db.collection("pushSubscriptions");
+    const subs = await col.find({}).toArray();
+
+    for (const sub of subs) {
+      checked++;
+      try {
+        const coords = new Adhan.Coordinates(sub.location.lat, sub.location.lon);
+        const params = buildParams(sub.calcMethod, sub.madhab);
+        const times = new Adhan.PrayerTimes(coords, new Date(), params);
+
+        const alreadySent = sub.lastSent && sub.lastSent.date === today ? sub.lastSent.prayers || [] : [];
+        let due = null;
+
+        for (const key of PRAYER_KEYS) {
+          if (!sub.notifPrefs || !sub.notifPrefs[key]) continue;
+          if (alreadySent.indexOf(key) !== -1) continue;
+          const t = times[key];
+          if (t && Math.abs(now - t.getTime()) <= 60000) {
+            due = key;
+            break; // one notification per run per subscriber is enough
+          }
+        }
+
+        if (!due) continue;
+
+        const label = PRAYER_LABELS[due];
+        const payload = JSON.stringify({
+          title: `حان وقت صلاة ${label.ar}`,
+          body: `It's time for ${label.en} prayer.`,
+          prayer: due,
+        });
+
+        try {
+          await webpush.sendNotification({ endpoint: sub._id, keys: sub.keys }, payload);
+          sent++;
+          const newPrayers = alreadySent.concat(due);
+          await col.updateOne({ _id: sub._id }, { $set: { lastSent: { date: today, prayers: newPrayers } } });
+        } catch (sendErr) {
+          if (sendErr && (sendErr.statusCode === 404 || sendErr.statusCode === 410)) {
+            await col.deleteOne({ _id: sub._id });
+            removed++;
+          } else {
+            errors++;
+          }
+        }
+      } catch (perSubErr) {
+        errors++;
+      }
+    }
+
+    res.status(200).json({ ok: true, checked, sent, removed, errors });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
