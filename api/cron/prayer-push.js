@@ -9,7 +9,17 @@
 const { getDb } = require("../../lib/mongodb");
 const { webpush, ensureConfigured } = require("../../lib/webpush");
 const { PRAYER_KEYS } = require("../../lib/prayer-shared");
-const Adhan = require("adhan");
+
+// adhan's published package.json declares "type": "module" for its lib/cjs
+// output too, which makes require("adhan") throw ERR_REQUIRE_ESM in
+// Vercel's Node runtime. Dynamic import() honors the package's "exports"
+// map and correctly resolves the real ESM build instead — cached after the
+// first cold-start invocation since this only runs once per module load.
+let AdhanPromise = null;
+function loadAdhan() {
+  if (!AdhanPromise) AdhanPromise = import("adhan");
+  return AdhanPromise;
+}
 
 const DUE_WINDOW_MS = 6 * 60 * 1000; // 6 minutes — covers a 5-minute check interval plus jitter
 
@@ -26,7 +36,7 @@ function todayUTC() {
   return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0");
 }
 
-function buildParams(calcMethod, madhab) {
+function buildParams(Adhan, calcMethod, madhab) {
   const factory = Adhan.CalculationMethod[calcMethod] || Adhan.CalculationMethod.MuslimWorldLeague;
   const params = factory();
   params.madhab = madhab === "hanafi" ? Adhan.Madhab.Hanafi : Adhan.Madhab.Shafi;
@@ -49,6 +59,14 @@ module.exports = async (req, res) => {
     return;
   }
 
+  let Adhan;
+  try {
+    Adhan = await loadAdhan();
+  } catch (e) {
+    res.status(500).json({ error: "Prayer time calculation unavailable" });
+    return;
+  }
+
   const now = Date.now();
   const today = todayUTC();
   let checked = 0, sent = 0, removed = 0, errors = 0;
@@ -62,7 +80,7 @@ module.exports = async (req, res) => {
       checked++;
       try {
         const coords = new Adhan.Coordinates(sub.location.lat, sub.location.lon);
-        const params = buildParams(sub.calcMethod, sub.madhab);
+        const params = buildParams(Adhan, sub.calcMethod, sub.madhab);
         const times = new Adhan.PrayerTimes(coords, new Date(), params);
 
         const alreadySent = sub.lastSent && sub.lastSent.date === today ? sub.lastSent.prayers || [] : [];
