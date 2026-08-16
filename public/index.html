@@ -1475,6 +1475,15 @@ if("serviceWorker" in navigator){
   window.addEventListener("load", function(){
     navigator.serviceWorker.register("/sw.js").catch(function(){});
   });
+  // When a new service worker takes over (a fresh deploy landed), reload
+  // once automatically so the update is visible on this load instead of
+  // requiring a second manual refresh to "notice" it.
+  var swRefreshed = false;
+  navigator.serviceWorker.addEventListener("controllerchange", function(){
+    if (swRefreshed) return;
+    swRefreshed = true;
+    location.reload();
+  });
 }
 </script>
 <script type="module">
