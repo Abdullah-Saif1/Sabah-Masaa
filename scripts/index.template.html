@@ -120,6 +120,122 @@ button{font:inherit;color:inherit;}
 
 .wrap{max-width:44rem;margin:0 auto;padding:0 1.1rem 5rem;}
 
+/* ============ nav + tab panels ============ */
+.appnav{
+  display:flex;gap:.3rem;overflow-x:auto;padding:1rem 0 .8rem;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.appnav::-webkit-scrollbar{display:none;}
+.navtab{
+  flex:none;display:flex;align-items:center;gap:.35rem;
+  border:1px solid var(--rule);background:var(--paper-raised);
+  border-radius:999px;padding:.5rem .85rem;font-weight:700;font-size:.76rem;
+  color:var(--ink-soft);cursor:pointer;transition:.25s;
+}
+.navtab-ic{font-size:.95rem;}
+.navtab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tab-panel[hidden]{display:none !important;}
+
+.pageh{text-align:center;margin:.6rem 0 1.4rem;}
+.pageh-ar{font-family:"Amiri",serif;font-weight:700;font-size:clamp(1.5rem,1.3rem + 1vw,1.9rem);margin:0 0 .15rem;direction:rtl;}
+.pageh-en{font-family:"Lora",serif;font-style:italic;color:var(--ink-soft);font-size:.9rem;margin:0;}
+
+.finehint{font-size:.74rem;color:var(--ink-faint);line-height:1.55;margin:.5rem 0 0;}
+
+/* location + city search */
+.locationbar{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:1rem;padding:.85rem 1rem;
+}
+.locationbar-info{display:flex;align-items:center;gap:.45rem;font-size:.85rem;font-weight:600;}
+.loc-ic{font-size:1rem;}
+.locationbar-actions{display:flex;gap:.45rem;flex-wrap:wrap;}
+.citysearch{margin-top:.6rem;position:relative;}
+.cityresults{
+  margin-top:.4rem;border:1px solid var(--rule);border-radius:.8rem;overflow:hidden;
+  background:var(--paper-raised);max-height:14rem;overflow-y:auto;
+}
+.cityresults:empty{display:none;}
+.cityresult-item{
+  display:block;width:100%;text-align:left;border:0;background:none;color:var(--ink);
+  padding:.6rem .8rem;font-size:.82rem;cursor:pointer;border-bottom:1px solid var(--rule);
+}
+.cityresult-item:last-child{border-bottom:0;}
+.cityresult-item:hover{background:var(--paper-raised-2);}
+
+/* prayer times */
+.nextprayer{
+  text-align:center;background:var(--paper-raised);border:1px solid var(--rule);border-radius:1.2rem;
+  padding:1.3rem 1rem;margin:1rem 0;
+}
+.nextprayer-label{font-size:.66rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.12em;font-weight:700;}
+.nextprayer-name{font-family:"Amiri";font-weight:700;font-size:1.7rem;color:var(--accent);margin:.3rem 0;direction:rtl;}
+.nextprayer-count{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.1rem;}
+.prayerlist{display:flex;flex-direction:column;gap:.5rem;}
+.prayerrow{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:.9rem;padding:.75rem 1rem;
+  transition:border-color .3s;
+}
+.prayerrow.active{border-color:var(--accent);}
+.prayerrow-name{display:flex;align-items:center;gap:.55rem;}
+.prayerrow-name .ar{font-size:1.05rem;line-height:1;}
+.prayerrow-name .en{font-size:.68rem;color:var(--ink-faint);}
+.prayerrow-time{font-variant-numeric:tabular-nums;font-weight:800;font-size:.95rem;}
+
+/* qibla */
+.qibla-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1rem 0;}
+.compass{
+  position:relative;width:min(70vw,16rem);height:min(70vw,16rem);border-radius:50%;
+  background:var(--paper-raised);border:1px solid var(--rule);box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:center;
+}
+.compass-ring{position:absolute;inset:.6rem;border:1px dashed var(--rule-strong);border-radius:50%;}
+.compass-needle{
+  font-size:2.2rem;transition:transform .3s ease-out;transform:rotate(0deg);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));
+}
+.compass-n{position:absolute;top:.6rem;font-size:.68rem;font-weight:800;color:var(--ink-faint);letter-spacing:.1em;}
+.qibla-reading{text-align:center;font-size:.85rem;color:var(--ink-soft);max-width:24rem;}
+
+/* hijri calendar */
+.hijritoday{text-align:center;background:var(--paper-raised);border:1px solid var(--rule);border-radius:1.2rem;padding:1.3rem 1rem;margin-bottom:1.3rem;}
+.hijritoday-date{font-family:"Amiri";font-weight:700;font-size:1.5rem;direction:rtl;}
+.hijritoday-greg{font-size:.78rem;color:var(--ink-faint);margin-top:.2rem;}
+.subh{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);font-weight:700;margin:0 0 .6rem;}
+.occasions{display:flex;flex-direction:column;gap:.5rem;}
+.occasion{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:.9rem;padding:.7rem 1rem;
+}
+.occasion-name{display:flex;flex-direction:column;}
+.occasion-name .ar{font-family:"Amiri";font-size:1rem;direction:rtl;}
+.occasion-name .en{font-size:.68rem;color:var(--ink-faint);}
+.occasion-when{font-size:.78rem;font-weight:700;color:var(--accent);text-align:right;white-space:nowrap;}
+
+/* settings */
+.setgroup{background:var(--paper-raised);border:1px solid var(--rule);border-radius:1.1rem;padding:1.1rem 1.2rem;margin-bottom:.9rem;}
+.setgroup-title{font-size:.82rem;font-weight:800;margin:0 0 .8rem;}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.5rem 0;flex-wrap:wrap;}
+.setrow + .setrow{border-top:1px dashed var(--rule);}
+.setrow-label{font-size:.82rem;font-weight:600;}
+.setrow-value{font-size:.8rem;color:var(--ink-soft);}
+.setrow-actions{display:flex;gap:.5rem;flex-wrap:wrap;padding:.4rem 0 .6rem;}
+.setselect{
+  border:1px solid var(--rule-strong);background:var(--paper);color:var(--ink);
+  border-radius:.6rem;padding:.4rem .6rem;font:inherit;font-size:.8rem;max-width:60%;
+}
+.segmented{display:inline-flex;border:1px solid var(--rule-strong);border-radius:999px;overflow:hidden;}
+.segmented button{border:0;background:var(--paper);color:var(--ink-soft);padding:.4rem .8rem;font:inherit;font-size:.74rem;font-weight:700;cursor:pointer;}
+.segmented button[aria-pressed="true"]{background:var(--accent);color:#fff;}
+.notifgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr));gap:.5rem;margin-top:.7rem;}
+.notifchip{
+  display:flex;align-items:center;justify-content:space-between;gap:.4rem;
+  border:1px solid var(--rule-strong);border-radius:.7rem;padding:.5rem .65rem;font-size:.78rem;font-weight:700;
+  cursor:pointer;background:var(--paper);
+}
+.notifchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+
 /* ============ hero / horizon ============ */
 .hero{padding:1.6rem 0 0;}
 .brandrow{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;padding-bottom:1rem;}
@@ -347,6 +463,25 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
 </head>
 <body>
 <div class="wrap">
+  <nav class="appnav" role="tablist" aria-label="Sections">
+    <button type="button" class="navtab" data-tab="adhkar" role="tab" aria-selected="true">
+      <span class="navtab-ic">🌅</span><span>الأذكار</span>
+    </button>
+    <button type="button" class="navtab" data-tab="prayer" role="tab" aria-selected="false">
+      <span class="navtab-ic">🕌</span><span>الصلاة</span>
+    </button>
+    <button type="button" class="navtab" data-tab="qibla" role="tab" aria-selected="false">
+      <span class="navtab-ic">🧭</span><span>القبلة</span>
+    </button>
+    <button type="button" class="navtab" data-tab="calendar" role="tab" aria-selected="false">
+      <span class="navtab-ic">🌙</span><span>التقويم</span>
+    </button>
+    <button type="button" class="navtab" data-tab="settings" role="tab" aria-selected="false">
+      <span class="navtab-ic">⚙️</span><span>الإعدادات</span>
+    </button>
+  </nav>
+
+  <section id="tab-adhkar" class="tab-panel" role="tabpanel">
   <div class="hero">
     <div class="brandrow">
       <div>
@@ -428,7 +563,7 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
   </div>
 
   <div class="misbaha">
-    <div class="misbaha-label"><span id="progress-count">0 / 17</span> completed today</div>
+    <div class="misbaha-label"><span id="progress-count">0 / 27</span> completed today</div>
     <div class="beads" id="beads"></div>
   </div>
 
@@ -438,6 +573,143 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
     <div class="cap">Closing salutation</div>
     <p class="ar">اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَىٰ نَبِيِّنَا مُحَمَّدٍ، وَعَلَىٰ آلِهِ وَصَحْبِهِ أَجْمَعِينَ</p>
   </div>
+  </section>
+
+  <section id="tab-prayer" class="tab-panel" role="tabpanel" hidden>
+    <header class="pageh">
+      <h1 class="pageh-ar">مواقيت الصلاة</h1>
+      <p class="pageh-en">Prayer Times</p>
+    </header>
+
+    <div class="locationbar" id="locationbar">
+      <div class="locationbar-info">
+        <span class="loc-ic">📍</span>
+        <span id="loc-label">Location not set</span>
+      </div>
+      <div class="locationbar-actions">
+        <button type="button" class="chip" id="loc-detect">Use my location</button>
+        <button type="button" class="chip" id="loc-manual-btn">Search a city</button>
+      </div>
+    </div>
+    <div class="citysearch" id="citysearch" hidden>
+      <input type="text" id="city-input" class="sync-input" placeholder="Search a city, e.g. Cairo" autocomplete="off">
+      <div class="cityresults" id="city-results"></div>
+    </div>
+
+    <div class="nextprayer" id="nextprayer">
+      <div class="nextprayer-label">Next prayer</div>
+      <div class="nextprayer-name" id="next-prayer-name">—</div>
+      <div class="nextprayer-count" id="next-prayer-count">—</div>
+    </div>
+
+    <div class="prayerlist" id="prayerlist"></div>
+    <p class="finehint" id="prayer-hint"></p>
+  </section>
+
+  <section id="tab-qibla" class="tab-panel" role="tabpanel" hidden>
+    <header class="pageh">
+      <h1 class="pageh-ar">اتجاه القبلة</h1>
+      <p class="pageh-en">Qibla Direction</p>
+    </header>
+    <div class="qibla-wrap">
+      <div class="compass" id="compass">
+        <div class="compass-ring"></div>
+        <div class="compass-needle" id="compass-needle">🕋</div>
+        <div class="compass-n">N</div>
+      </div>
+      <p class="qibla-reading" id="qibla-reading">Set your location to see the Qibla direction.</p>
+      <button type="button" class="chip" id="compass-enable" hidden>Enable compass</button>
+    </div>
+  </section>
+
+  <section id="tab-calendar" class="tab-panel" role="tabpanel" hidden>
+    <header class="pageh">
+      <h1 class="pageh-ar">التقويم الهجري</h1>
+      <p class="pageh-en">Hijri Calendar</p>
+    </header>
+    <div class="hijritoday" id="hijritoday">
+      <div class="hijritoday-date" id="hijri-date-main">—</div>
+      <div class="hijritoday-greg" id="hijri-date-greg">—</div>
+    </div>
+    <h2 class="subh">Upcoming occasions</h2>
+    <div class="occasions" id="occasions"></div>
+  </section>
+
+  <section id="tab-settings" class="tab-panel" role="tabpanel" hidden>
+    <header class="pageh">
+      <h1 class="pageh-ar">الإعدادات</h1>
+      <p class="pageh-en">Settings</p>
+    </header>
+
+    <div class="setgroup">
+      <h2 class="setgroup-title">Location &amp; prayer calculation</h2>
+      <div class="setrow">
+        <div class="setrow-label">Current location</div>
+        <div class="setrow-value" id="set-loc-value">Not set</div>
+      </div>
+      <div class="setrow-actions">
+        <button type="button" class="chip" id="set-loc-detect">Use my location</button>
+        <button type="button" class="chip" id="set-loc-manual">Search a city</button>
+      </div>
+      <div class="setrow">
+        <div class="setrow-label">Calculation method</div>
+        <select class="setselect" id="set-calc-method"></select>
+      </div>
+      <div class="setrow">
+        <div class="setrow-label">Asr calculation (madhab)</div>
+        <select class="setselect" id="set-madhab">
+          <option value="shafi">Shafi‘i / Maliki / Hanbali (standard)</option>
+          <option value="hanafi">Hanafi</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setgroup">
+      <h2 class="setgroup-title">Notifications</h2>
+      <div class="setrow">
+        <div class="setrow-label">Prayer reminders</div>
+        <button type="button" class="chip" id="notif-master" aria-pressed="false">Enable</button>
+      </div>
+      <p class="finehint" id="notif-hint">Turns on a reminder at each prayer time you select below, even when the app is closed.</p>
+      <div class="notifgrid" id="notifgrid"></div>
+    </div>
+
+    <div class="setgroup">
+      <h2 class="setgroup-title">Appearance</h2>
+      <div class="setrow">
+        <div class="setrow-label">Theme</div>
+        <div class="segmented" id="theme-segmented">
+          <button type="button" data-theme-choice="auto">Auto</button>
+          <button type="button" data-theme-choice="light">Light</button>
+          <button type="button" data-theme-choice="dark">Dark</button>
+        </div>
+      </div>
+      <div class="setrow">
+        <div class="setrow-label">Language</div>
+        <div class="segmented" id="lang-segmented">
+          <button type="button" data-lang-choice="ar">العربية</button>
+          <button type="button" data-lang-choice="en">English</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setgroup">
+      <h2 class="setgroup-title">Quran (coming soon)</h2>
+      <p class="finehint">A full Quran reader with Tafsir Ibn Kathir &amp; al-Tabari, audio recitation, search, and bookmark sync is next on the roadmap — these preferences will apply there once it ships.</p>
+      <div class="setrow">
+        <div class="setrow-label">Preferred Tafsir</div>
+        <div class="segmented" id="tafsir-segmented">
+          <button type="button" data-tafsir-choice="ibn-kathir">ابن كثير</button>
+          <button type="button" data-tafsir-choice="tabari">الطبري</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setgroup">
+      <h2 class="setgroup-title">Sync</h2>
+      <p class="finehint">Managed from the Sync chip on the Adhkar tab — the same code carries your adhkar progress and (soon) your Quran bookmarks across devices.</p>
+    </div>
+  </section>
 
   <footer>
     Texts compiled from Ḥiṣn al-Muslim (Fortress of the Muslim). Please verify wording against a trusted muṣḥaf or copy of Ḥiṣn al-Muslim before teaching or publishing further.<br>
@@ -451,6 +723,60 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
 
   /* ---------- content ---------- */
   var SRC = "حصن المسلم";
+  var SRC_GENERAL = "أذكار مأثورة";
+
+  var general = [
+    {ar:"التهليل (١٠٠ مرة)", en:"The Testimony of Oneness, said 100 times", item:{
+      ar:"لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+      translit:"Lā ilāha illallāhu waḥdahū lā sharīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli shay’in qadīr.",
+      en:"There is no god but Allah alone, without partner. His is the dominion, His is the praise, and He is capable of all things.",
+      target:100}},
+    {ar:"اللهم إنك عفو", en:"O Allah, You Are Pardoning", item:{
+      ar:"اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+      translit:"Allāhumma innaka ‘afuwwun tuḥibbul-‘afwa fa‘fu ‘annī.",
+      en:"O Allah, You are Pardoning and You love to pardon, so pardon me.",
+      target:100}},
+    {ar:"دعاء يونس عليه السلام", en:"The Supplication of Yunus, peace be upon him", item:{
+      ar:"لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+      translit:"Lā ilāha illā anta subḥānaka innī kuntu minaẓ-ẓālimīn.",
+      en:"There is no god but You, glory be to You; indeed I have been among the wrongdoers.",
+      target:100}},
+    {ar:"الصلاة على النبي ﷺ", en:"Blessings upon the Prophet", item:{
+      ar:"اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ",
+      translit:"Allāhumma ṣalli ‘alā Muḥammad.",
+      en:"O Allah, send blessings upon Muhammad.",
+      target:100}},
+    {ar:"التسبيح", en:"Glory to the Sovereign", item:{
+      ar:"سُبْحَانَ الْمَلِكِ الْقُدُّوسِ",
+      translit:"Subḥānal-Malikil-Quddūs.",
+      en:"Glory be to the Sovereign, the Most Holy.",
+      target:10}},
+    {ar:"التكبير", en:"Takbir", item:{
+      ar:"اللَّهُ أَكْبَرُ",
+      translit:"Allāhu akbar.",
+      en:"Allah is the Greatest.",
+      target:10}},
+    {ar:"التحميد", en:"Tahmid", item:{
+      ar:"الْحَمْدُ لِلَّهِ",
+      translit:"Al-ḥamdu lillāh.",
+      en:"All praise is for Allah.",
+      target:10}},
+    {ar:"الاستغفار", en:"Istighfar", item:{
+      ar:"أَسْتَغْفِرُ اللَّهَ",
+      translit:"Astaghfirullāh.",
+      en:"I seek Allah's forgiveness.",
+      target:10}},
+    {ar:"كلمة التوحيد", en:"The Word of Oneness", item:{
+      ar:"لَا إِلَٰهَ إِلَّا اللَّهُ",
+      translit:"Lā ilāha illallāh.",
+      en:"There is no god but Allah.",
+      target:10}},
+    {ar:"الاستعاذة من الضيق", en:"Refuge from Distress", item:{
+      ar:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ ضِيقِ الدُّنْيَا وَضِيقِ يَوْمِ الْقِيَامَةِ",
+      translit:"Allāhumma innī a‘ūdhu bika min ḍīqid-dunyā wa ḍīqi yawmil-qiyāmah.",
+      en:"O Allah, I seek refuge in You from the distress of this world and the distress of the Day of Resurrection.",
+      target:10}}
+  ];
 
   var morning = [
     {id:"m1", ar:"آية الكرسي", en:"Ayat al-Kursi", items:[{
@@ -580,6 +906,11 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
     {id:"e17", ar:"التسبيح والاستغفار", en:"Closing tasbih", items: morning[16].items}
   ];
 
+  general.forEach(function(g, idx){
+    morning.push({id:"m-g" + (idx + 1), ar:g.ar, en:g.en, src:SRC_GENERAL, items:[g.item]});
+    evening.push({id:"e-g" + (idx + 1), ar:g.ar, en:g.en, src:SRC_GENERAL, items:[g.item]});
+  });
+
   var DATA = {morning: morning, evening: evening};
 
   /* ---------- state ---------- */
@@ -656,7 +987,7 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
       head.innerHTML =
         '<div class="card-num">' + String(idx+1).padStart(2,"0") + '</div>' +
         '<div class="card-titles"><div class="card-title-ar">' + card.ar + '</div><div class="card-title-en">' + card.en + '</div></div>' +
-        '<div class="card-source">' + SRC + '</div>' +
+        '<div class="card-source">' + (card.src || SRC) + '</div>' +
         '<div class="check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>';
       el.appendChild(head);
 
@@ -933,6 +1264,535 @@ if("serviceWorker" in navigator){
     navigator.serviceWorker.register("/sw.js").catch(function(){});
   });
 }
+</script>
+<script type="module">
+import * as Adhan from "/vendor/adhan/Adhan.js";
+
+/* ---------- prefs ---------- */
+var PREFS_KEY = "sabahmasaa:prefs";
+function loadPrefs(){
+  try {
+    var v = JSON.parse(localStorage.getItem(PREFS_KEY) || "null");
+    if (v && typeof v === "object") return Object.assign(defaultPrefs(), v);
+  } catch(e){}
+  return defaultPrefs();
+}
+function defaultPrefs(){
+  return {
+    theme: "auto",
+    lang: "ar",
+    location: null, // {lat, lon, label, source}
+    calcMethod: "MuslimWorldLeague",
+    madhab: "shafi",
+    notifPrefs: {fajr:true, dhuhr:true, asr:true, maghrib:true, isha:true},
+    pushEnabled: false,
+    tafsir: "ibn-kathir"
+  };
+}
+function savePrefs(){ try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e){} }
+var prefs = loadPrefs();
+
+var CALC_METHOD_LABELS = {
+  MuslimWorldLeague: "رابطة العالم الإسلامي (MWL)",
+  Egyptian: "الهيئة المصرية العامة للمساحة",
+  Karachi: "جامعة العلوم الإسلامية، كراتشي",
+  UmmAlQura: "أم القرى، مكة المكرمة",
+  Dubai: "دبي",
+  MoonsightingCommittee: "لجنة رؤية الهلال العالمية",
+  NorthAmerica: "ISNA (أمريكا الشمالية)",
+  Kuwait: "الكويت",
+  Qatar: "قطر",
+  Singapore: "سنغافورة (MUIS)",
+  Tehran: "معهد الجيوفيزياء، طهران",
+  Turkey: "ديانت (تركيا)",
+  Other: "أخرى"
+};
+var PRAYER_META = [
+  {key:"fajr", ar:"الفجر", en:"Fajr"},
+  {key:"sunrise", ar:"الشروق", en:"Sunrise"},
+  {key:"dhuhr", ar:"الظهر", en:"Dhuhr"},
+  {key:"asr", ar:"العصر", en:"Asr"},
+  {key:"maghrib", ar:"المغرب", en:"Maghrib"},
+  {key:"isha", ar:"العشاء", en:"Isha"}
+];
+var NOTIF_KEYS = ["fajr","dhuhr","asr","maghrib","isha"];
+
+/* ---------- tab navigation ---------- */
+var TABS = ["adhkar","prayer","qibla","calendar","settings"];
+function showTab(name){
+  if (TABS.indexOf(name) === -1) name = "adhkar";
+  TABS.forEach(function(t){
+    var panel = document.getElementById("tab-" + t);
+    var btn = document.querySelector('.navtab[data-tab="' + t + '"]');
+    if (panel) panel.hidden = (t !== name);
+    if (btn) btn.setAttribute("aria-selected", t === name ? "true" : "false");
+  });
+  if (name === "prayer") { initPrayerTab(); }
+  if (name === "qibla") { initQiblaTab(); }
+  if (name === "calendar") { initCalendarTab(); }
+}
+document.querySelectorAll(".navtab").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var name = btn.getAttribute("data-tab");
+    location.hash = name;
+    showTab(name);
+  });
+});
+window.addEventListener("hashchange", function(){
+  showTab(location.hash.replace("#",""));
+});
+showTab(location.hash.replace("#","") || "adhkar");
+
+/* ---------- theme ---------- */
+function applyTheme(){
+  if (prefs.theme === "light") document.documentElement.setAttribute("data-theme","light");
+  else if (prefs.theme === "dark") document.documentElement.setAttribute("data-theme","dark");
+  else document.documentElement.removeAttribute("data-theme");
+  document.querySelectorAll('#theme-segmented button').forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-theme-choice") === prefs.theme ? "true" : "false");
+  });
+}
+document.querySelectorAll('#theme-segmented button').forEach(function(b){
+  b.addEventListener("click", function(){
+    prefs.theme = b.getAttribute("data-theme-choice");
+    savePrefs(); applyTheme();
+  });
+});
+
+/* ---------- language (scaffold: stores preference, sets <html lang>) ---------- */
+function applyLang(){
+  document.documentElement.lang = prefs.lang;
+  document.querySelectorAll('#lang-segmented button').forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-lang-choice") === prefs.lang ? "true" : "false");
+  });
+}
+document.querySelectorAll('#lang-segmented button').forEach(function(b){
+  b.addEventListener("click", function(){
+    prefs.lang = b.getAttribute("data-lang-choice");
+    savePrefs(); applyLang();
+  });
+});
+
+/* ---------- tafsir preference (scaffold for the Quran reader, Phase 2) ---------- */
+function applyTafsirPref(){
+  document.querySelectorAll('#tafsir-segmented button').forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-tafsir-choice") === prefs.tafsir ? "true" : "false");
+  });
+}
+document.querySelectorAll('#tafsir-segmented button').forEach(function(b){
+  b.addEventListener("click", function(){
+    prefs.tafsir = b.getAttribute("data-tafsir-choice");
+    savePrefs(); applyTafsirPref();
+  });
+});
+
+/* ---------- location ---------- */
+function renderLocationUI(){
+  var label = prefs.location ? prefs.location.label : null;
+  var elMain = document.getElementById("loc-label");
+  var elSet = document.getElementById("set-loc-value");
+  if (elMain) elMain.textContent = label || "Location not set";
+  if (elSet) elSet.textContent = label || "Not set";
+}
+function setLocation(lat, lon, label, source){
+  prefs.location = { lat: lat, lon: lon, label: label || (lat.toFixed(2) + ", " + lon.toFixed(2)), source: source || "manual" };
+  savePrefs();
+  renderLocationUI();
+  if (!document.getElementById("tab-prayer").hidden) renderPrayerTimes();
+  if (!document.getElementById("tab-qibla").hidden) renderQibla();
+  if (prefs.pushEnabled) pushResubscribeQuiet();
+}
+function reverseGeocode(lat, lon){
+  return fetch("https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=" + lat + "&lon=" + lon, {
+    headers: { "Accept-Language": "ar,en" }
+  }).then(function(r){ return r.json(); }).then(function(d){
+    var a = (d && d.address) || {};
+    var city = a.city || a.town || a.village || a.municipality || a.county || a.state || "";
+    return city + (a.country ? "، " + a.country : "");
+  }).catch(function(){ return null; });
+}
+function detectLocation(){
+  if (!("geolocation" in navigator)) {
+    alert("Geolocation isn't available in this browser. Try searching a city instead.");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat = pos.coords.latitude, lon = pos.coords.longitude;
+    reverseGeocode(lat, lon).then(function(label){
+      setLocation(lat, lon, label, "auto");
+    });
+  }, function(err){
+    alert("Couldn't get your location (" + err.message + "). Try searching a city instead.");
+  }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+}
+[document.getElementById("loc-detect"), document.getElementById("set-loc-detect")].forEach(function(b){
+  if (b) b.addEventListener("click", detectLocation);
+});
+
+var citySearchTimer = null;
+function doCitySearch(query, resultsEl){
+  fetch("https://nominatim.openstreetmap.org/search?format=json&limit=6&accept-language=ar,en&q=" + encodeURIComponent(query))
+    .then(function(r){ return r.json(); })
+    .then(function(list){
+      resultsEl.innerHTML = "";
+      (list || []).forEach(function(item){
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "cityresult-item";
+        btn.textContent = item.display_name;
+        btn.addEventListener("click", function(){
+          setLocation(parseFloat(item.lat), parseFloat(item.lon), item.display_name.split(",").slice(0,2).join(","), "manual");
+          document.getElementById("citysearch").hidden = true;
+          document.getElementById("city-input").value = "";
+          resultsEl.innerHTML = "";
+        });
+        resultsEl.appendChild(btn);
+      });
+    }).catch(function(){});
+}
+var cityToggle = document.getElementById("loc-manual-btn");
+if (cityToggle) cityToggle.addEventListener("click", function(){
+  var panel = document.getElementById("citysearch");
+  panel.hidden = !panel.hidden;
+  if (!panel.hidden) document.getElementById("city-input").focus();
+});
+var setManualBtn = document.getElementById("set-loc-manual");
+if (setManualBtn) setManualBtn.addEventListener("click", function(){
+  location.hash = "prayer"; showTab("prayer");
+  var panel = document.getElementById("citysearch");
+  panel.hidden = false;
+  document.getElementById("city-input").focus();
+});
+var cityInput = document.getElementById("city-input");
+if (cityInput) cityInput.addEventListener("input", function(){
+  clearTimeout(citySearchTimer);
+  var q = cityInput.value.trim();
+  var resultsEl = document.getElementById("city-results");
+  if (q.length < 2) { resultsEl.innerHTML = ""; return; }
+  citySearchTimer = setTimeout(function(){ doCitySearch(q, resultsEl); }, 450);
+});
+
+/* ---------- prayer times ---------- */
+var prayerTicker = null;
+function buildParams(){
+  var factory = Adhan.CalculationMethod[prefs.calcMethod] || Adhan.CalculationMethod.MuslimWorldLeague;
+  var params = factory();
+  params.madhab = prefs.madhab === "hanafi" ? Adhan.Madhab.Hanafi : Adhan.Madhab.Shafi;
+  return params;
+}
+function renderPrayerTimes(){
+  var listEl = document.getElementById("prayerlist");
+  var hintEl = document.getElementById("prayer-hint");
+  if (!prefs.location) {
+    listEl.innerHTML = "";
+    hintEl.textContent = "Set your location above to see today's prayer times.";
+    document.getElementById("next-prayer-name").textContent = "—";
+    document.getElementById("next-prayer-count").textContent = "—";
+    return;
+  }
+  hintEl.textContent = "Calculation: " + (CALC_METHOD_LABELS[prefs.calcMethod] || prefs.calcMethod) + " · change this in Settings.";
+
+  var coords = new Adhan.Coordinates(prefs.location.lat, prefs.location.lon);
+  var params = buildParams();
+  var now = new Date();
+  var times = new Adhan.PrayerTimes(coords, now, params);
+
+  listEl.innerHTML = "";
+  var nowMs = now.getTime();
+  var activeKey = null;
+  PRAYER_META.forEach(function(p){
+    var t = times[p.key];
+    if (t && t.getTime() <= nowMs) activeKey = p.key;
+  });
+
+  PRAYER_META.forEach(function(p){
+    var t = times[p.key];
+    var row = document.createElement("div");
+    row.className = "prayerrow" + (p.key === activeKey ? " active" : "");
+    var timeStr = t ? t.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}) : "—";
+    row.innerHTML =
+      '<div class="prayerrow-name"><span class="ar">' + p.ar + '</span><span class="en">' + p.en + '</span></div>' +
+      '<div class="prayerrow-time">' + timeStr + '</div>';
+    listEl.appendChild(row);
+  });
+
+  // next prayer (sunrise excluded — it isn't a prayer)
+  var order = ["fajr","dhuhr","asr","maghrib","isha"];
+  var nextKey = null, nextTime = null;
+  for (var i = 0; i < order.length; i++) {
+    var t2 = times[order[i]];
+    if (t2 && t2.getTime() > nowMs) { nextKey = order[i]; nextTime = t2; break; }
+  }
+  if (!nextKey) {
+    var tomorrow = new Date(nowMs + 86400000);
+    var timesTomorrow = new Adhan.PrayerTimes(coords, tomorrow, params);
+    nextKey = "fajr"; nextTime = timesTomorrow.fajr;
+  }
+  var meta = PRAYER_META.filter(function(p){ return p.key === nextKey; })[0];
+  document.getElementById("next-prayer-name").textContent = meta ? meta.ar + " · " + meta.en : "—";
+
+  clearInterval(prayerTicker);
+  function tick(){
+    var remain = nextTime.getTime() - Date.now();
+    if (remain <= 0) { renderPrayerTimes(); return; }
+    var h = Math.floor(remain / 3600000);
+    var m = Math.floor((remain % 3600000) / 60000);
+    var s = Math.floor((remain % 60000) / 1000);
+    document.getElementById("next-prayer-count").textContent =
+      "in " + (h > 0 ? h + "h " : "") + m + "m " + s + "s";
+  }
+  tick();
+  prayerTicker = setInterval(tick, 1000);
+}
+function initPrayerTab(){ renderLocationUI(); renderPrayerTimes(); }
+
+/* ---------- calculation method select (Settings) ---------- */
+(function(){
+  var sel = document.getElementById("set-calc-method");
+  Object.keys(CALC_METHOD_LABELS).forEach(function(key){
+    var opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = CALC_METHOD_LABELS[key];
+    sel.appendChild(opt);
+  });
+  sel.value = prefs.calcMethod;
+  sel.addEventListener("change", function(){
+    prefs.calcMethod = sel.value; savePrefs();
+    renderPrayerTimes();
+    if (prefs.pushEnabled) pushResubscribeQuiet();
+  });
+  var madhabSel = document.getElementById("set-madhab");
+  madhabSel.value = prefs.madhab;
+  madhabSel.addEventListener("change", function(){
+    prefs.madhab = madhabSel.value; savePrefs();
+    renderPrayerTimes();
+    if (prefs.pushEnabled) pushResubscribeQuiet();
+  });
+})();
+
+/* ---------- qibla ---------- */
+function qiblaBearing(lat, lon){
+  var kaabaLat = 21.4225, kaabaLon = 39.8262;
+  var φ1 = lat * Math.PI / 180, φ2 = kaabaLat * Math.PI / 180;
+  var Δλ = (kaabaLon - lon) * Math.PI / 180;
+  var y = Math.sin(Δλ) * Math.cos(φ2);
+  var x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  var θ = Math.atan2(y, x);
+  return (θ * 180 / Math.PI + 360) % 360;
+}
+var deviceHeading = null;
+function renderQibla(){
+  var readingEl = document.getElementById("qibla-reading");
+  var needle = document.getElementById("compass-needle");
+  if (!prefs.location) {
+    readingEl.textContent = "Set your location on the Prayer tab to see the Qibla direction.";
+    return;
+  }
+  var bearing = qiblaBearing(prefs.location.lat, prefs.location.lon);
+  var rotation = deviceHeading != null ? (bearing - deviceHeading + 360) % 360 : bearing;
+  needle.style.transform = "rotate(" + rotation + "deg)";
+  var compass8 = ["N","NE","E","SE","S","SW","W","NW"][Math.round(bearing / 45) % 8];
+  readingEl.textContent = "Qibla is " + Math.round(bearing) + "° from true north (" + compass8 + ") from " + prefs.location.label + ".";
+}
+function initQiblaTab(){
+  renderQibla();
+  var enableBtn = document.getElementById("compass-enable");
+  var needsPermission = typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function";
+  if (needsPermission && deviceHeading == null) {
+    enableBtn.hidden = false;
+    enableBtn.onclick = function(){
+      DeviceOrientationEvent.requestPermission().then(function(state){
+        if (state === "granted") startCompass();
+      }).catch(function(){});
+    };
+  } else if (typeof DeviceOrientationEvent !== "undefined") {
+    startCompass();
+  }
+}
+function startCompass(){
+  document.getElementById("compass-enable").hidden = true;
+  window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+  window.addEventListener("deviceorientation", handleOrientation, true);
+}
+function handleOrientation(e){
+  var heading = null;
+  if (typeof e.webkitCompassHeading === "number") heading = e.webkitCompassHeading;
+  else if (e.absolute && typeof e.alpha === "number") heading = 360 - e.alpha;
+  if (heading == null) return;
+  deviceHeading = heading;
+  renderQibla();
+}
+
+/* ---------- hijri calendar ---------- */
+function hijriParts(date){
+  try {
+    var fmt = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {day:"numeric", month:"numeric", year:"numeric"});
+    var parts = fmt.formatToParts(date);
+    var o = {};
+    parts.forEach(function(p){ if (p.type !== "literal") o[p.type] = parseInt(p.value, 10); });
+    return o;
+  } catch (e) { return null; }
+}
+var OCCASIONS = [
+  {month:1, day:1, ar:"رأس السنة الهجرية", en:"Islamic New Year"},
+  {month:1, day:10, ar:"يوم عاشوراء", en:"Day of Ashura"},
+  {month:3, day:12, ar:"المولد النبوي", en:"Mawlid al-Nabi (widely observed date)"},
+  {month:7, day:27, ar:"الإسراء والمعراج", en:"Isra and Mi'raj (widely observed date)"},
+  {month:9, day:1, ar:"بداية رمضان", en:"Start of Ramadan"},
+  {month:9, day:27, ar:"ليلة القدر (المرجّحة)", en:"Laylat al-Qadr (commonly observed night)"},
+  {month:10, day:1, ar:"عيد الفطر", en:"Eid al-Fitr"},
+  {month:12, day:9, ar:"يوم عرفة", en:"Day of Arafah"},
+  {month:12, day:10, ar:"عيد الأضحى", en:"Eid al-Adha"}
+];
+function nextOccasionDate(month, day){
+  for (var i = 0; i < 380; i++) {
+    var d = new Date(Date.now() + i * 86400000);
+    var hp = hijriParts(d);
+    if (hp && hp.month === month && hp.day === day) return d;
+  }
+  return null;
+}
+var calendarInited = false;
+function initCalendarTab(){
+  if (calendarInited) return;
+  calendarInited = true;
+  try {
+    var mainFmt = new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura", {day:"numeric", month:"long", year:"numeric"});
+    document.getElementById("hijri-date-main").textContent = mainFmt.format(new Date());
+    document.getElementById("hijri-date-greg").textContent =
+      new Date().toLocaleDateString(undefined, {weekday:"long", year:"numeric", month:"long", day:"numeric"}) +
+      " — dates are calculated and may differ by a day from local moon-sighting announcements.";
+  } catch (e) {
+    document.getElementById("hijri-date-main").textContent = "Hijri calendar isn't supported in this browser.";
+  }
+
+  var wrap = document.getElementById("occasions");
+  wrap.innerHTML = "";
+  OCCASIONS.forEach(function(occ){
+    var d = nextOccasionDate(occ.month, occ.day);
+    var row = document.createElement("div");
+    row.className = "occasion";
+    var when = d ? d.toLocaleDateString(undefined, {month:"short", day:"numeric"}) : "—";
+    row.innerHTML =
+      '<div class="occasion-name"><span class="ar">' + occ.ar + '</span><span class="en">' + occ.en + '</span></div>' +
+      '<div class="occasion-when">' + when + '</div>';
+    wrap.appendChild(row);
+  });
+}
+
+/* ---------- notifications / push ---------- */
+function urlBase64ToUint8Array(base64String){
+  var padding = "=".repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  var rawData = atob(base64);
+  var out = new Uint8Array(rawData.length);
+  for (var i = 0; i < rawData.length; i++) out[i] = rawData.charCodeAt(i);
+  return out;
+}
+function setNotifStatus(msg, kind){
+  var el = document.getElementById("notif-hint");
+  if (!el) return;
+  el.textContent = msg;
+  el.className = "finehint" + (kind === "err" ? " err" : "");
+}
+function renderNotifUI(){
+  var master = document.getElementById("notif-master");
+  master.setAttribute("aria-pressed", prefs.pushEnabled ? "true" : "false");
+  master.textContent = prefs.pushEnabled ? "Enabled" : "Enable";
+
+  var grid = document.getElementById("notifgrid");
+  grid.innerHTML = "";
+  NOTIF_KEYS.forEach(function(key){
+    var meta = PRAYER_META.filter(function(p){ return p.key === key; })[0];
+    var chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "notifchip";
+    chip.setAttribute("aria-pressed", prefs.notifPrefs[key] ? "true" : "false");
+    chip.innerHTML = '<span>' + meta.ar + '</span>';
+    chip.addEventListener("click", function(){
+      prefs.notifPrefs[key] = !prefs.notifPrefs[key];
+      savePrefs(); renderNotifUI();
+      if (prefs.pushEnabled) pushResubscribeQuiet();
+    });
+    grid.appendChild(chip);
+  });
+}
+function pushResubscribeQuiet(){
+  if (!("serviceWorker" in navigator) || !prefs.location) return;
+  navigator.serviceWorker.ready.then(function(reg){
+    return reg.pushManager.getSubscription();
+  }).then(function(sub){
+    if (!sub) return;
+    return fetch("/api/push/subscribe", {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        subscription: sub.toJSON ? sub.toJSON() : sub,
+        location: prefs.location, calcMethod: prefs.calcMethod, madhab: prefs.madhab, notifPrefs: prefs.notifPrefs
+      })
+    });
+  }).catch(function(){});
+}
+function enablePush(){
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+    setNotifStatus("Push notifications aren't supported in this browser.", "err");
+    return;
+  }
+  if (!prefs.location) {
+    setNotifStatus("Set your location on the Prayer tab first.", "err");
+    return;
+  }
+  setNotifStatus("Requesting permission…");
+  Notification.requestPermission().then(function(perm){
+    if (perm !== "granted") throw new Error("Permission was not granted.");
+    return fetch("/api/push/vapid-public-key").then(function(r){ return r.json(); });
+  }).then(function(d){
+    if (!d.publicKey) throw new Error("Push isn't configured on the server yet.");
+    return navigator.serviceWorker.ready.then(function(reg){
+      return reg.pushManager.getSubscription().then(function(existing){
+        return existing || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(d.publicKey) });
+      });
+    });
+  }).then(function(sub){
+    return fetch("/api/push/subscribe", {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        subscription: sub.toJSON ? sub.toJSON() : sub,
+        location: prefs.location, calcMethod: prefs.calcMethod, madhab: prefs.madhab, notifPrefs: prefs.notifPrefs
+      })
+    });
+  }).then(function(r){
+    if (!r.ok) throw new Error("Server rejected the subscription.");
+    prefs.pushEnabled = true; savePrefs(); renderNotifUI();
+    setNotifStatus("Reminders enabled — you'll get a notification at each prayer you selected below, even if the app is closed.");
+  }).catch(function(err){
+    setNotifStatus("Couldn't enable reminders: " + (err && err.message ? err.message : "unknown error"), "err");
+  });
+}
+function disablePush(){
+  navigator.serviceWorker.ready.then(function(reg){
+    return reg.pushManager.getSubscription();
+  }).then(function(sub){
+    if (!sub) return;
+    return fetch("/api/push/unsubscribe", {
+      method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ endpoint: sub.endpoint })
+    }).then(function(){ return sub.unsubscribe(); });
+  }).then(function(){
+    prefs.pushEnabled = false; savePrefs(); renderNotifUI();
+    setNotifStatus("Reminders turned off.");
+  }).catch(function(){
+    prefs.pushEnabled = false; savePrefs(); renderNotifUI();
+  });
+}
+document.getElementById("notif-master").addEventListener("click", function(){
+  if (prefs.pushEnabled) disablePush(); else enablePush();
+});
+
+/* ---------- init ---------- */
+applyTheme();
+applyLang();
+applyTafsirPref();
+renderLocationUI();
+renderNotifUI();
 </script>
 </body>
 </html>
