@@ -12,7 +12,10 @@ async function main() {
     process.exit(1);
   }
   const dbName = process.env.MONGODB_DB || "sabah_masaa";
-  const client = new MongoClient(uri);
+  // family: 4 works around a TLS handshake failure some Windows/IPv6 setups
+  // hit against Atlas (SSL alert 80). Not needed in Vercel's own runtime —
+  // this is a local-script-only option.
+  const client = new MongoClient(uri, { family: 4 });
   await client.connect();
   const db = client.db(dbName);
   const ninetyDaysSeconds = 60 * 60 * 24 * 90;
