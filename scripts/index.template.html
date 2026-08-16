@@ -17,6 +17,7 @@
 @font-face{font-family:"Lora";font-style:normal;font-weight:400 600;font-display:swap;src:url(data:font/woff2;base64,__LORA_400__) format("woff2");}
 @font-face{font-family:"Lora";font-style:italic;font-weight:400;font-display:swap;src:url(data:font/woff2;base64,__LORA_ITALIC__) format("woff2");}
 @font-face{font-family:"Manrope";font-style:normal;font-weight:400 800;font-display:swap;src:url(data:font/woff2;base64,__MANROPE__) format("woff2");}
+@font-face{font-family:"Amiri Quran";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/amiri-quran.woff2") format("woff2");}
 
 /* ============ tokens ============ */
 :root{
@@ -235,6 +236,129 @@ button{font:inherit;color:inherit;}
   cursor:pointer;background:var(--paper);
 }
 .notifchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+/* ============ quran ============ */
+.qsearch{position:relative;margin-bottom:1rem;}
+.qsearch-input{width:100%;font-size:.88rem;padding:.7rem .9rem;text-align:right;direction:rtl;}
+.qsearch-results{
+  position:absolute;left:0;right:0;top:calc(100% + .4rem);z-index:5;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:.9rem;
+  box-shadow:var(--shadow);max-height:22rem;overflow-y:auto;
+}
+.qsearch-results:empty{display:none;}
+.qsr-item{
+  display:block;width:100%;text-align:right;direction:rtl;border:0;background:none;color:var(--ink);
+  padding:.65rem .9rem;cursor:pointer;border-bottom:1px solid var(--rule);font-family:"Manrope";
+}
+.qsr-item:last-child{border-bottom:0;}
+.qsr-item:hover{background:var(--paper-raised-2);}
+.qsr-item .qsr-surah{font-size:.68rem;color:var(--ink-faint);display:block;margin-top:.2rem;font-family:inherit;}
+.qsr-item .qsr-ar{font-family:"Amiri Quran","Amiri",serif;font-size:1rem;}
+.qsr-item mark{background:var(--accent);color:#fff;border-radius:.2rem;padding:0 .1rem;}
+
+.continuecard{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;
+  background:var(--paper-raised);border:1px solid var(--accent);border-radius:1rem;
+  padding:.85rem 1rem;margin-bottom:1rem;cursor:pointer;font:inherit;text-align:right;direction:rtl;color:var(--ink);
+}
+.continuecard-label{font-size:.68rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
+.continuecard-loc{font-family:"Amiri",serif;font-weight:700;color:var(--accent);font-size:1rem;}
+
+.qtabs{display:flex;gap:.4rem;margin-bottom:1rem;}
+.qtab{
+  flex:1;border:1px solid var(--rule-strong);background:var(--paper-raised);color:var(--ink-soft);
+  border-radius:.8rem;padding:.55rem;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;
+}
+.qtab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.qview[hidden]{display:none;}
+
+.surahlist{display:flex;flex-direction:column;gap:.5rem;}
+.surahrow{
+  display:flex;align-items:center;gap:.75rem;background:var(--paper-raised);border:1px solid var(--rule);
+  border-radius:.9rem;padding:.7rem .9rem;cursor:pointer;text-align:right;direction:rtl;font:inherit;color:var(--ink);width:100%;
+}
+.surahrow:hover{border-color:var(--rule-strong);}
+.surahnum{
+  flex:none;width:2.1rem;height:2.1rem;border-radius:50%;border:1px solid var(--rule-strong);
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;
+}
+.surahinfo{flex:1;min-width:0;}
+.surahname-ar{font-family:"Amiri Quran","Amiri",serif;font-size:1.15rem;}
+.surahname-en{font-size:.68rem;color:var(--ink-faint);margin-top:.1rem;}
+.surahmeta{flex:none;font-size:.66rem;color:var(--ink-faint);text-align:left;direction:ltr;}
+
+.qsaved-tabs{display:flex;gap:.5rem;margin-bottom:.9rem;}
+.savedlist{display:flex;flex-direction:column;gap:.6rem;}
+.savedrow{
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:.9rem;padding:.8rem 1rem;
+  cursor:pointer;text-align:right;direction:rtl;
+}
+.savedrow .qsr-surah{display:block;font-size:.66rem;color:var(--ink-faint);margin-bottom:.35rem;}
+.savedrow .ar{font-family:"Amiri Quran","Amiri",serif;font-size:1.1rem;line-height:1.9;}
+
+/* quran reader */
+.qreader-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  padding:.9rem 0;position:sticky;top:0;background:var(--paper);z-index:4;border-bottom:1px solid var(--rule);margin-bottom:1rem;
+}
+.qreader-title{text-align:center;flex:1;min-width:0;}
+.qreader-title-ar{display:block;font-family:"Amiri",serif;font-weight:700;font-size:1rem;direction:rtl;}
+.qreader-title-en{display:block;font-size:.66rem;color:var(--ink-faint);}
+.qreader-body{padding-bottom:2rem;}
+.qbismillah{text-align:center;font-family:"Amiri Quran","Amiri",serif;font-size:1.35rem;color:var(--accent);margin:0 0 1.3rem;}
+
+.ayahblock{
+  display:flex;gap:.7rem;padding:1rem 0;border-bottom:1px dashed var(--rule);
+  scroll-margin-top:5rem;
+}
+.ayahblock.reading-mark{background:linear-gradient(90deg,transparent,rgba(201,121,61,.08),transparent);}
+.ayahnum{
+  flex:none;width:2rem;height:2rem;border-radius:50%;border:1px solid var(--rule-strong);
+  display:flex;align-items:center;justify-content:center;font-size:.66rem;font-weight:800;color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;margin-top:.15rem;
+}
+.ayahtext{flex:1;min-width:0;}
+.ayahtext .ar{
+  font-family:"Amiri Quran","Amiri",serif;direction:rtl;text-align:right;
+  font-size:var(--quran-size,1.7rem);line-height:2.3;color:var(--ink);cursor:pointer;
+}
+.ayahtoolbar{display:flex;gap:.4rem;justify-content:flex-end;margin-top:.5rem;}
+.ayahtool{
+  border:0;background:none;color:var(--ink-faint);cursor:pointer;font-size:.85rem;
+  width:1.9rem;height:1.9rem;border-radius:50%;display:flex;align-items:center;justify-content:center;
+}
+.ayahtool:hover{background:var(--paper-raised-2);color:var(--ink);}
+.ayahtool.on{color:var(--accent);}
+
+/* tafsir modal */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(20,16,12,.55);z-index:50;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+:root[data-theme="dark"] .modal-backdrop,
+:root:not([data-theme="light"]) .modal-backdrop{ background:rgba(0,0,0,.65); }
+.modal-sheet{
+  background:var(--paper);border-radius:1.3rem 1.3rem 0 0;max-width:36rem;width:100%;
+  max-height:85vh;overflow-y:auto;padding:1.2rem 1.3rem 1.6rem;box-shadow:0 -8px 30px rgba(0,0,0,.25);
+}
+@media (min-width:640px){
+  .modal-backdrop{align-items:center;}
+  .modal-sheet{border-radius:1.3rem;max-height:80vh;}
+}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem;margin-bottom:.8rem;}
+.modal-ayah-ref{font-size:.7rem;color:var(--ink-faint);font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.modal-ayah-ar{font-family:"Amiri Quran","Amiri",serif;font-size:1.25rem;line-height:1.9;margin-top:.3rem;}
+.modal-close{
+  flex:none;border:0;background:var(--paper-raised);color:var(--ink-soft);width:2rem;height:2rem;border-radius:50%;
+  cursor:pointer;font-size:.9rem;
+}
+.tafsir-picker{margin-bottom:.8rem;}
+.modal-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.modal-body{font-size:.92rem;line-height:2;direction:rtl;text-align:right;color:var(--ink);}
+.modal-body p{margin:0 0 .8rem;}
+.modal-body .arabic{font-family:"Amiri Quran","Amiri",serif;}
+.modal-source{margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--rule);text-align:center;}
 
 /* ============ hero / horizon ============ */
 .hero{padding:1.6rem 0 0;}
@@ -467,6 +591,9 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
     <button type="button" class="navtab" data-tab="adhkar" role="tab" aria-selected="true">
       <span class="navtab-ic">🌅</span><span>الأذكار</span>
     </button>
+    <button type="button" class="navtab" data-tab="quran" role="tab" aria-selected="false">
+      <span class="navtab-ic">📖</span><span>القرآن</span>
+    </button>
     <button type="button" class="navtab" data-tab="prayer" role="tab" aria-selected="false">
       <span class="navtab-ic">🕌</span><span>الصلاة</span>
     </button>
@@ -574,6 +701,84 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
     <p class="ar">اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَىٰ نَبِيِّنَا مُحَمَّدٍ، وَعَلَىٰ آلِهِ وَصَحْبِهِ أَجْمَعِينَ</p>
   </div>
   </section>
+
+  <section id="tab-quran" class="tab-panel" role="tabpanel" hidden>
+    <div id="quran-list-view">
+      <header class="pageh">
+        <h1 class="pageh-ar">القرآن الكريم</h1>
+        <p class="pageh-en">The Noble Quran</p>
+      </header>
+
+      <div class="qsearch">
+        <input type="text" id="quran-search" class="sync-input qsearch-input" placeholder="ابحث عن سورة أو آية… (search a surah or ayah)" autocomplete="off">
+        <div class="qsearch-results" id="quran-search-results"></div>
+      </div>
+
+      <button type="button" class="continuecard" id="quran-continue" hidden>
+        <span class="continuecard-label">Continue reading</span>
+        <span class="continuecard-loc" id="quran-continue-loc">—</span>
+      </button>
+
+      <div class="qtabs" role="tablist" aria-label="Quran views">
+        <button type="button" class="qtab" data-qview="surahs" aria-selected="true">السور</button>
+        <button type="button" class="qtab" data-qview="saved" aria-selected="false">المحفوظات</button>
+      </div>
+
+      <div id="quran-view-surahs" class="qview">
+        <div class="surahlist" id="surahlist"></div>
+      </div>
+
+      <div id="quran-view-saved" class="qview" hidden>
+        <div class="qsaved-tabs">
+          <button type="button" class="chip" data-savedview="favorites" aria-pressed="true">⭐ Favorites</button>
+          <button type="button" class="chip" data-savedview="bookmarks" aria-pressed="false">🔖 Bookmarks</button>
+        </div>
+        <div class="savedlist" id="savedlist"></div>
+        <p class="finehint" id="saved-empty-hint" hidden>Nothing here yet — tap the star or bookmark icon on any ayah while reading.</p>
+      </div>
+    </div>
+
+    <div id="quran-reader-view" class="qreader" hidden>
+      <div class="qreader-topbar">
+        <button type="button" class="chip" id="quran-back">← السور</button>
+        <div class="qreader-title">
+          <span class="qreader-title-ar" id="qreader-surah-ar">—</span>
+          <span class="qreader-title-en" id="qreader-surah-en">—</span>
+        </div>
+        <div class="fontstep" aria-label="Quran text size">
+          <button type="button" id="quran-smaller" aria-label="Smaller Quran text">–</button>
+          <span>﴾﴿</span>
+          <button type="button" id="quran-bigger" aria-label="Larger Quran text">+</button>
+        </div>
+      </div>
+      <div class="qreader-body" id="qreader-body"></div>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" id="tafsir-modal" hidden>
+    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="tafsir-ayah-ref">
+      <div class="modal-head">
+        <div>
+          <div class="modal-ayah-ref" id="tafsir-ayah-ref">—</div>
+          <div class="modal-ayah-ar" id="tafsir-ayah-ar" dir="rtl">—</div>
+        </div>
+        <button type="button" class="modal-close" id="tafsir-close" aria-label="Close">✕</button>
+      </div>
+      <div class="tafsir-picker segmented" id="tafsir-picker">
+        <button type="button" data-tafsir-edition="ibn-kathir">ابن كثير</button>
+        <button type="button" data-tafsir-edition="tabari">الطبري</button>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="chip" id="tafsir-fav-btn">⭐ Favorite</button>
+        <button type="button" class="chip" id="tafsir-bookmark-btn">🔖 Bookmark</button>
+        <button type="button" class="chip" id="tafsir-share-btn">↗ Share</button>
+      </div>
+      <div class="modal-body" id="tafsir-modal-body">
+        <p class="finehint">Loading tafsir…</p>
+      </div>
+      <p class="finehint modal-source" id="tafsir-modal-title">Source: Quran.com</p>
+    </div>
+  </div>
 
   <section id="tab-prayer" class="tab-panel" role="tabpanel" hidden>
     <header class="pageh">
@@ -694,8 +899,7 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
     </div>
 
     <div class="setgroup">
-      <h2 class="setgroup-title">Quran (coming soon)</h2>
-      <p class="finehint">A full Quran reader with Tafsir Ibn Kathir &amp; al-Tabari, audio recitation, search, and bookmark sync is next on the roadmap — these preferences will apply there once it ships.</p>
+      <h2 class="setgroup-title">Quran</h2>
       <div class="setrow">
         <div class="setrow-label">Preferred Tafsir</div>
         <div class="segmented" id="tafsir-segmented">
@@ -703,11 +907,12 @@ footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:
           <button type="button" data-tafsir-choice="tabari">الطبري</button>
         </div>
       </div>
+      <p class="finehint">Sets which tafsir opens by default when you tap an ayah — switch per-ayah anytime from the tafsir sheet itself. Audio recitation is planned for a later update.</p>
     </div>
 
     <div class="setgroup">
       <h2 class="setgroup-title">Sync</h2>
-      <p class="finehint">Managed from the Sync chip on the Adhkar tab — the same code carries your adhkar progress and (soon) your Quran bookmarks across devices.</p>
+      <p class="finehint">Managed from the Sync chip on the Adhkar tab — carries your adhkar progress across devices. Quran favorites/bookmarks are saved on this device only for now.</p>
     </div>
   </section>
 
@@ -1286,7 +1491,8 @@ function defaultPrefs(){
     madhab: "shafi",
     notifPrefs: {fajr:true, dhuhr:true, asr:true, maghrib:true, isha:true},
     pushEnabled: false,
-    tafsir: "ibn-kathir"
+    tafsir: "ibn-kathir",
+    quranSize: 1.7
   };
 }
 function savePrefs(){ try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e){} }
@@ -1318,7 +1524,7 @@ var PRAYER_META = [
 var NOTIF_KEYS = ["fajr","dhuhr","asr","maghrib","isha"];
 
 /* ---------- tab navigation ---------- */
-var TABS = ["adhkar","prayer","qibla","calendar","settings"];
+var TABS = ["adhkar","quran","prayer","qibla","calendar","settings"];
 function showTab(name){
   if (TABS.indexOf(name) === -1) name = "adhkar";
   TABS.forEach(function(t){
@@ -1327,6 +1533,7 @@ function showTab(name){
     if (panel) panel.hidden = (t !== name);
     if (btn) btn.setAttribute("aria-selected", t === name ? "true" : "false");
   });
+  if (name === "quran") { initQuranTab(); }
   if (name === "prayer") { initPrayerTab(); }
   if (name === "qibla") { initQiblaTab(); }
   if (name === "calendar") { initCalendarTab(); }
@@ -1786,6 +1993,408 @@ function disablePush(){
 document.getElementById("notif-master").addEventListener("click", function(){
   if (prefs.pushEnabled) disablePush(); else enablePush();
 });
+
+/* ---------- quran ---------- */
+var Q = {
+  chapters: null,      // [{id, nameAr, nameSimple, nameTranslatedEn, versesCount, revelationPlace, bismillahPre}]
+  verses: null,        // { "2:255": "arabic text", ... }
+  loading: null,       // in-flight promise
+  currentChapter: null,
+  savedView: "favorites",
+  tafsirEdition: null,
+  tafsirCache: {},     // "edition:verseKey" -> {html, editionNameAr, editionNameEn}
+  activeAyah: null      // verse_key currently open in the tafsir modal
+};
+
+function normalizeArabic(s){
+  // Strip tashkeel/diacritics + normalize alef/ya variants for forgiving search.
+  return (s || "")
+    .replace(/[ً-ٰٟۖ-ۭ]/g, "")
+    .replace(/[إأآا]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/[ًٌٍَُِّْ]/g, "")
+    .trim();
+}
+
+function loadQuranData(){
+  if (Q.chapters && Q.verses) return Promise.resolve();
+  if (Q.loading) return Q.loading;
+  Q.loading = Promise.all([
+    fetch("/data/chapters.json").then(function(r){ return r.json(); }),
+    fetch("/data/quran-uthmani.json").then(function(r){ return r.json(); })
+  ]).then(function(res){
+    Q.chapters = res[0];
+    Q.verses = res[1];
+  });
+  return Q.loading;
+}
+
+function loadJSONLS(key, fallback){
+  try { var v = JSON.parse(localStorage.getItem(key) || "null"); return v == null ? fallback : v; } catch(e){ return fallback; }
+}
+function saveJSONLS(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }
+
+function getFavorites(){ return loadJSONLS("sabahmasaa:quran:favorites", []); }
+function getBookmarks(){ return loadJSONLS("sabahmasaa:quran:bookmarks", []); }
+function toggleInList(key, verseKey){
+  var list = loadJSONLS(key, []);
+  var idx = list.indexOf(verseKey);
+  if (idx === -1) list.unshift(verseKey); else list.splice(idx, 1);
+  saveJSONLS(key, list);
+  return idx === -1;
+}
+function isInList(key, verseKey){ return loadJSONLS(key, []).indexOf(verseKey) !== -1; }
+
+function getLastRead(){ return loadJSONLS("sabahmasaa:quran:lastread", null); }
+function setLastRead(chapterId, verseKey){
+  saveJSONLS("sabahmasaa:quran:lastread", { chapterId: chapterId, verseKey: verseKey, ts: Date.now() });
+}
+
+function chapterById(id){
+  return Q.chapters.filter(function(c){ return c.id === id; })[0];
+}
+
+/* ---- tab switching within Quran (Surahs / Saved) ---- */
+document.querySelectorAll(".qtab").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var target = btn.getAttribute("data-qview");
+    document.querySelectorAll(".qtab").forEach(function(b){ b.setAttribute("aria-selected", b === btn ? "true" : "false"); });
+    document.getElementById("quran-view-surahs").hidden = target !== "surahs";
+    document.getElementById("quran-view-saved").hidden = target !== "saved";
+    if (target === "saved") renderSavedList();
+  });
+});
+document.querySelectorAll('[data-savedview]').forEach(function(btn){
+  btn.addEventListener("click", function(){
+    Q.savedView = btn.getAttribute("data-savedview");
+    document.querySelectorAll('[data-savedview]').forEach(function(b){ b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+    renderSavedList();
+  });
+});
+
+function renderSavedList(){
+  var wrap = document.getElementById("savedlist");
+  var hint = document.getElementById("saved-empty-hint");
+  var keys = Q.savedView === "favorites" ? getFavorites() : getBookmarks();
+  wrap.innerHTML = "";
+  hint.hidden = keys.length > 0;
+  keys.forEach(function(verseKey){
+    var chId = parseInt(verseKey.split(":")[0], 10);
+    var ch = chapterById(chId);
+    var row = document.createElement("button");
+    row.type = "button";
+    row.className = "savedrow";
+    row.innerHTML =
+      '<span class="qsr-surah">' + (ch ? ch.nameAr + " · آية " + verseKey.split(":")[1] : verseKey) + '</span>' +
+      '<span class="ar">' + (Q.verses[verseKey] || "") + '</span>';
+    row.addEventListener("click", function(){ openAyahTafsir(verseKey); });
+    wrap.appendChild(row);
+  });
+}
+
+/* ---- surah list ---- */
+function renderSurahList(){
+  var wrap = document.getElementById("surahlist");
+  wrap.innerHTML = "";
+  Q.chapters.forEach(function(ch){
+    var row = document.createElement("button");
+    row.type = "button";
+    row.className = "surahrow";
+    row.innerHTML =
+      '<span class="surahnum">' + ch.id + '</span>' +
+      '<span class="surahinfo"><span class="surahname-ar">' + ch.nameAr + '</span><span class="surahname-en">' + ch.nameTranslatedEn + ' · ' + ch.nameSimple + '</span></span>' +
+      '<span class="surahmeta">' + ch.versesCount + ' ayat</span>';
+    row.addEventListener("click", function(){ openSurah(ch.id); });
+    wrap.appendChild(row);
+  });
+}
+
+function renderContinueCard(){
+  var card = document.getElementById("quran-continue");
+  var last = getLastRead();
+  if (!last) { card.hidden = true; return; }
+  var ch = chapterById(last.chapterId);
+  if (!ch) { card.hidden = true; return; }
+  card.hidden = false;
+  document.getElementById("quran-continue-loc").textContent = ch.nameAr + " · آية " + last.verseKey.split(":")[1];
+  card.onclick = function(){ openSurah(last.chapterId, last.verseKey); };
+}
+
+/* ---- search ---- */
+var quranSearchTimer = null;
+document.getElementById("quran-search").addEventListener("input", function(){
+  var q = this.value.trim();
+  clearTimeout(quranSearchTimer);
+  var resultsEl = document.getElementById("quran-search-results");
+  if (q.length < 2) { resultsEl.innerHTML = ""; return; }
+  quranSearchTimer = setTimeout(function(){ runQuranSearch(q, resultsEl); }, 200);
+});
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; });
+}
+function runQuranSearch(query, resultsEl){
+  var nq = normalizeArabic(query);
+  var results = [];
+
+  // surah name matches (Arabic + English)
+  Q.chapters.forEach(function(ch){
+    if (normalizeArabic(ch.nameAr).indexOf(nq) !== -1 || ch.nameTranslatedEn.toLowerCase().indexOf(query.toLowerCase()) !== -1 || ch.nameSimple.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
+      results.push({ type: "surah", chapterId: ch.id });
+    }
+  });
+
+  // ayah text matches (normalized substring; capped to keep this fast+small)
+  if (nq.length >= 2) {
+    var count = 0;
+    for (var key in Q.verses) {
+      if (count >= 25) break;
+      var norm = normalizeArabic(Q.verses[key]);
+      if (norm.indexOf(nq) !== -1) { results.push({ type: "ayah", verseKey: key }); count++; }
+    }
+  }
+
+  resultsEl.innerHTML = "";
+  if (!results.length) {
+    resultsEl.innerHTML = '<div class="qsr-item">No matches. Try a different spelling.</div>';
+    return;
+  }
+  results.slice(0, 30).forEach(function(r){
+    var item = document.createElement("button");
+    item.type = "button";
+    item.className = "qsr-item";
+    if (r.type === "surah") {
+      var ch = chapterById(r.chapterId);
+      item.innerHTML = '<span class="qsr-ar">' + ch.nameAr + '</span><span class="qsr-surah">' + ch.nameTranslatedEn + ' · ' + ch.versesCount + ' ayat</span>';
+      item.addEventListener("click", function(){ openSurah(r.chapterId); resultsEl.innerHTML = ""; document.getElementById("quran-search").value = ""; });
+    } else {
+      var chId = parseInt(r.verseKey.split(":")[0], 10);
+      var ch2 = chapterById(chId);
+      item.innerHTML = '<span class="qsr-ar">' + Q.verses[r.verseKey] + '</span><span class="qsr-surah">' + (ch2 ? ch2.nameAr : "") + ' · آية ' + r.verseKey.split(":")[1] + '</span>';
+      item.addEventListener("click", function(){ openSurah(chId, r.verseKey); resultsEl.innerHTML = ""; document.getElementById("quran-search").value = ""; });
+    }
+    resultsEl.appendChild(item);
+  });
+}
+
+/* ---- reader ---- */
+function openSurah(chapterId, scrollToVerseKey){
+  Q.currentChapter = chapterId;
+  var ch = chapterById(chapterId);
+  document.getElementById("quran-list-view").hidden = true;
+  document.getElementById("quran-reader-view").hidden = false;
+  document.getElementById("qreader-surah-ar").textContent = ch.nameAr;
+  document.getElementById("qreader-surah-en").textContent = ch.nameTranslatedEn + " · " + ch.nameSimple;
+
+  var body = document.getElementById("qreader-body");
+  body.innerHTML = "";
+  if (ch.bismillahPre) {
+    var b = document.createElement("p");
+    b.className = "qbismillah";
+    b.textContent = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+    body.appendChild(b);
+  }
+
+  for (var i = 1; i <= ch.versesCount; i++) {
+    var verseKey = chapterId + ":" + i;
+    var text = Q.verses[verseKey];
+    if (!text) continue;
+    body.appendChild(buildAyahBlock(verseKey, text));
+  }
+
+  if (scrollToVerseKey) {
+    setLastRead(chapterId, scrollToVerseKey);
+    requestAnimationFrame(function(){
+      var el = document.getElementById("ayah-" + scrollToVerseKey.replace(":", "-"));
+      if (el) { el.scrollIntoView({behavior:"smooth", block:"center"}); el.classList.add("reading-mark"); }
+    });
+  } else {
+    body.scrollIntoView({behavior:"instant", block:"start"});
+  }
+}
+function buildAyahBlock(verseKey, text){
+  var wrap = document.createElement("div");
+  wrap.className = "ayahblock";
+  wrap.id = "ayah-" + verseKey.replace(":", "-");
+
+  var num = document.createElement("div");
+  num.className = "ayahnum";
+  num.textContent = verseKey.split(":")[1];
+  wrap.appendChild(num);
+
+  var content = document.createElement("div");
+  content.className = "ayahtext";
+
+  var ar = document.createElement("p");
+  ar.className = "ar";
+  ar.textContent = text;
+  ar.addEventListener("click", function(){ openAyahTafsir(verseKey); markLastRead(verseKey); });
+  content.appendChild(ar);
+
+  var toolbar = document.createElement("div");
+  toolbar.className = "ayahtoolbar";
+
+  var favBtn = document.createElement("button");
+  favBtn.type = "button"; favBtn.className = "ayahtool" + (isInList("sabahmasaa:quran:favorites", verseKey) ? " on" : "");
+  favBtn.title = "Favorite"; favBtn.textContent = "⭐";
+  favBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var on = toggleInList("sabahmasaa:quran:favorites", verseKey);
+    favBtn.classList.toggle("on", on);
+  });
+  toolbar.appendChild(favBtn);
+
+  var bmBtn = document.createElement("button");
+  bmBtn.type = "button"; bmBtn.className = "ayahtool" + (isInList("sabahmasaa:quran:bookmarks", verseKey) ? " on" : "");
+  bmBtn.title = "Bookmark"; bmBtn.textContent = "🔖";
+  bmBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var on = toggleInList("sabahmasaa:quran:bookmarks", verseKey);
+    bmBtn.classList.toggle("on", on);
+  });
+  toolbar.appendChild(bmBtn);
+
+  var tafsirBtn = document.createElement("button");
+  tafsirBtn.type = "button"; tafsirBtn.className = "ayahtool";
+  tafsirBtn.title = "Tafsir"; tafsirBtn.textContent = "📖";
+  tafsirBtn.addEventListener("click", function(e){ e.stopPropagation(); openAyahTafsir(verseKey); markLastRead(verseKey); });
+  toolbar.appendChild(tafsirBtn);
+
+  content.appendChild(toolbar);
+  wrap.appendChild(content);
+  return wrap;
+}
+function markLastRead(verseKey){
+  var chId = parseInt(verseKey.split(":")[0], 10);
+  setLastRead(chId, verseKey);
+}
+
+document.getElementById("quran-back").addEventListener("click", function(){
+  document.getElementById("quran-reader-view").hidden = true;
+  document.getElementById("quran-list-view").hidden = false;
+  renderContinueCard();
+});
+
+document.getElementById("quran-bigger").addEventListener("click", function(){
+  prefs.quranSize = Math.min(2.6, +(( prefs.quranSize || 1.7) + 0.1).toFixed(2));
+  savePrefs(); applyQuranSize();
+});
+document.getElementById("quran-smaller").addEventListener("click", function(){
+  prefs.quranSize = Math.max(1.2, +(( prefs.quranSize || 1.7) - 0.1).toFixed(2));
+  savePrefs(); applyQuranSize();
+});
+function applyQuranSize(){
+  document.documentElement.style.setProperty("--quran-size", (prefs.quranSize || 1.7) + "rem");
+}
+
+/* ---- tafsir modal ---- */
+function openAyahTafsir(verseKey){
+  Q.activeAyah = verseKey;
+  var chId = parseInt(verseKey.split(":")[0], 10);
+  var ch = chapterById(chId);
+  document.getElementById("tafsir-ayah-ref").textContent = (ch ? ch.nameAr : "") + " · آية " + verseKey.split(":")[1];
+  document.getElementById("tafsir-ayah-ar").textContent = Q.verses[verseKey] || "";
+  document.getElementById("tafsir-fav-btn").classList.toggle("on", isInList("sabahmasaa:quran:favorites", verseKey));
+  document.getElementById("tafsir-bookmark-btn").classList.toggle("on", isInList("sabahmasaa:quran:bookmarks", verseKey));
+
+  var edition = prefs.tafsir === "tabari" ? "tabari" : "ibn-kathir";
+  Q.tafsirEdition = edition;
+  updateTafsirPickerUI();
+  document.getElementById("tafsir-modal").hidden = false;
+  document.body.style.overflow = "hidden";
+  loadTafsirInto(verseKey, edition);
+}
+function closeTafsirModal(){
+  document.getElementById("tafsir-modal").hidden = true;
+  document.body.style.overflow = "";
+}
+document.getElementById("tafsir-close").addEventListener("click", closeTafsirModal);
+document.getElementById("tafsir-modal").addEventListener("click", function(e){
+  if (e.target === this) closeTafsirModal();
+});
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape" && !document.getElementById("tafsir-modal").hidden) closeTafsirModal();
+});
+function updateTafsirPickerUI(){
+  document.querySelectorAll("#tafsir-picker button").forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-tafsir-edition") === Q.tafsirEdition ? "true" : "false");
+  });
+}
+document.querySelectorAll("#tafsir-picker button").forEach(function(b){
+  b.addEventListener("click", function(){
+    Q.tafsirEdition = b.getAttribute("data-tafsir-edition");
+    updateTafsirPickerUI();
+    loadTafsirInto(Q.activeAyah, Q.tafsirEdition);
+  });
+});
+function loadTafsirInto(verseKey, edition){
+  var bodyEl = document.getElementById("tafsir-modal-body");
+  var sourceEl = document.getElementById("tafsir-modal-title");
+  var cacheKey = edition + ":" + verseKey;
+  if (Q.tafsirCache[cacheKey]) {
+    renderTafsir(Q.tafsirCache[cacheKey]);
+    return;
+  }
+  bodyEl.innerHTML = '<p class="finehint">Loading tafsir…</p>';
+  sourceEl.textContent = "Source: Quran.com";
+  fetch("/api/quran/tafsir?verse_key=" + encodeURIComponent(verseKey) + "&edition=" + edition)
+    .then(function(r){ if (!r.ok) throw new Error("fetch failed"); return r.json(); })
+    .then(function(data){
+      Q.tafsirCache[cacheKey] = data;
+      if (Q.activeAyah === verseKey && Q.tafsirEdition === edition) renderTafsir(data);
+    })
+    .catch(function(){
+      if (Q.activeAyah === verseKey) {
+        bodyEl.innerHTML = '<p class="finehint">Couldn\'t load the tafsir right now. Check your connection and try again.</p>';
+      }
+    });
+}
+function renderTafsir(data){
+  var bodyEl = document.getElementById("tafsir-modal-body");
+  bodyEl.innerHTML = data.html;
+  document.getElementById("tafsir-modal-title").textContent = "Source: Quran.com — " + data.editionNameAr + " / " + data.editionNameEn;
+}
+document.getElementById("tafsir-fav-btn").addEventListener("click", function(){
+  var on = toggleInList("sabahmasaa:quran:favorites", Q.activeAyah);
+  this.classList.toggle("on", on);
+});
+document.getElementById("tafsir-bookmark-btn").addEventListener("click", function(){
+  var on = toggleInList("sabahmasaa:quran:bookmarks", Q.activeAyah);
+  this.classList.toggle("on", on);
+});
+document.getElementById("tafsir-share-btn").addEventListener("click", function(){
+  var verseKey = Q.activeAyah;
+  var chId = parseInt(verseKey.split(":")[0], 10);
+  var ch = chapterById(chId);
+  var cacheKey = Q.tafsirEdition + ":" + verseKey;
+  var tafsirData = Q.tafsirCache[cacheKey];
+  var plainTafsir = tafsirData ? tafsirData.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 400) + "…" : "";
+  var text = (ch ? ch.nameAr : "") + " " + verseKey.split(":")[1] + "\n\n" +
+    (Q.verses[verseKey] || "") + "\n\n" +
+    (tafsirData ? tafsirData.editionNameAr + ":\n" + plainTafsir : "") +
+    "\n\n— Sabah & Masaa";
+  if (navigator.share) {
+    navigator.share({ text: text }).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){
+      alert("Copied to clipboard — paste it anywhere to share.");
+    });
+  }
+});
+
+/* ---- init ---- */
+var quranInited = false;
+function initQuranTab(){
+  applyQuranSize();
+  if (quranInited) { renderContinueCard(); return; }
+  loadQuranData().then(function(){
+    quranInited = true;
+    renderSurahList();
+    renderContinueCard();
+  }).catch(function(){
+    document.getElementById("surahlist").innerHTML = '<p class="finehint">Couldn\'t load the Quran text. Check your connection and reopen this tab.</p>';
+  });
+}
 
 /* ---------- init ---------- */
 applyTheme();
