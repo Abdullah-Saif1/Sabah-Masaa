@@ -1,13 +1,17 @@
 // GET /api/cron/prayer-push
-// Pinged every minute by an external scheduler (Vercel Hobby only allows
-// daily cron, so this is triggered from outside — see .github/workflows).
+// Pinged every 5 minutes by a GitHub Actions workflow (Vercel Hobby only
+// allows daily cron, and GitHub Actions' own schedule trigger has a ~5min
+// floor plus real-world jitter — see .github/workflows/prayer-push.yml).
 // For every push subscription, computes today's prayer times server-side
-// and sends a push for any enabled prayer whose time is "now" (within a
-// one-minute window), skipping ones already sent today.
+// and sends a push for any enabled prayer whose time falls within a
+// generous window of "now", skipping ones already sent today so repeated
+// checks inside that window never double-notify.
 const { getDb } = require("../../lib/mongodb");
 const { webpush, ensureConfigured } = require("../../lib/webpush");
 const { PRAYER_KEYS } = require("../../lib/prayer-shared");
 const Adhan = require("adhan");
+
+const DUE_WINDOW_MS = 6 * 60 * 1000; // 6 minutes — covers a 5-minute check interval plus jitter
 
 const PRAYER_LABELS = {
   fajr: { ar: "الفجر", en: "Fajr" },
@@ -68,7 +72,11 @@ module.exports = async (req, res) => {
           if (!sub.notifPrefs || !sub.notifPrefs[key]) continue;
           if (alreadySent.indexOf(key) !== -1) continue;
           const t = times[key];
-          if (t && Math.abs(now - t.getTime()) <= 60000) {
+          // Fire only after the prayer has actually started (never early),
+          // within a window wide enough to survive GitHub Actions' ~5min
+          // schedule floor and its real-world jitter.
+          const elapsed = now - t.getTime();
+          if (t && elapsed >= 0 && elapsed <= DUE_WINDOW_MS) {
             due = key;
             break; // one notification per run per subscriber is enough
           }

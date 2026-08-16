@@ -1,0 +1,31 @@
+name: Prayer notification pinger
+
+# Vercel's Hobby plan only runs cron jobs once a day, so this workflow is
+# the actual scheduler for prayer-time push notifications: it pings the
+# app's cron endpoint on GitHub's schedule instead. GitHub Actions has its
+# own practical floor of about 5 minutes for `schedule` triggers (and may
+# delay a run further under load), so the endpoint itself accepts a
+# several-minute-wide window and de-dupes per subscriber per day — see
+# api/cron/prayer-push.js.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call prayer-push cron endpoint
+        run: |
+          status=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://sabah-masaa.vercel.app/api/cron/prayer-push")
+          echo "HTTP status: $status"
+          cat /tmp/resp.json
+          echo
+          if [ "$status" -ge 300 ]; then
+            echo "::error::prayer-push endpoint returned $status"
+            exit 1
+          fi
