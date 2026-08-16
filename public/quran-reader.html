@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>القرآن الكريم — Quran Reader</title>
+<meta name="description" content="A simple, standalone Quran reader: browse every surah or search for a specific ayah. No tafsir, no extras — just the text.">
+<meta name="theme-color" content="#C9793D" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/icon-512.png" sizes="512x512" type="image/png">
+<link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<style>
+@font-face{font-family:"Amiri";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/amiri-400.woff2") format("woff2");}
+@font-face{font-family:"Amiri";font-style:normal;font-weight:700;font-display:swap;src:url("/fonts/amiri-700.woff2") format("woff2");}
+@font-face{font-family:"Amiri Quran";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/amiri-quran.woff2") format("woff2");}
+@font-face{font-family:"Manrope";font-style:normal;font-weight:400 800;font-display:swap;src:url("/fonts/manrope.woff2") format("woff2");}
+
+:root{
+  --paper:#FBF6EC;
+  --paper-raised:#F5EDDB;
+  --paper-raised-2:#EFE4CC;
+  --ink:#2B2420;
+  --ink-soft:#6E6254;
+  --ink-faint:#9C9080;
+  --rule:#E3D5BC;
+  --rule-strong:#CBB68F;
+  --accent:#C9793D;
+  --shadow:0 1px 2px rgba(43,36,32,.06),0 8px 24px -12px rgba(43,36,32,.18);
+  --focus:#3D6E8C;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#17130F;
+    --paper-raised:#1F1911;
+    --paper-raised-2:#271F15;
+    --ink:#EFE6D6;
+    --ink-soft:#B3A691;
+    --ink-faint:#7A6E5C;
+    --rule:#362C20;
+    --rule-strong:#4A3C2B;
+    --accent:#E08F4E;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17130F;
+  --paper-raised:#1F1911;
+  --paper-raised-2:#271F15;
+  --ink:#EFE6D6;
+  --ink-soft:#B3A691;
+  --ink-faint:#7A6E5C;
+  --rule:#362C20;
+  --rule-strong:#4A3C2B;
+  --accent:#E08F4E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Manrope",system-ui,sans-serif;line-height:1.5;min-height:100vh;
+}
+::selection{background:var(--accent);color:var(--paper);}
+button{font:inherit;color:inherit;}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px;}
+.wrap{max-width:40rem;margin:0 auto;padding:1.3rem 1.1rem 4rem;}
+
+.pageh{text-align:center;margin-bottom:1.2rem;}
+.pageh-ar{font-family:"Amiri",serif;font-weight:700;font-size:clamp(1.5rem,1.3rem + 1vw,1.9rem);margin:0 0 .15rem;}
+.pageh-en{font-family:"Amiri",serif;font-style:italic;color:var(--ink-soft);font-size:.85rem;margin:0;direction:ltr;}
+.pageh-note{font-size:.72rem;color:var(--ink-faint);margin:.5rem 0 0;}
+
+.qsearch{position:relative;margin-bottom:1rem;}
+.qsearch-input{
+  width:100%;font-size:.9rem;padding:.75rem .95rem;text-align:right;
+  border:1px solid var(--rule-strong);background:var(--paper-raised);color:var(--ink);
+  border-radius:.9rem;font:inherit;
+}
+.qsearch-results{
+  position:absolute;left:0;right:0;top:calc(100% + .4rem);z-index:5;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:.9rem;
+  box-shadow:var(--shadow);max-height:22rem;overflow-y:auto;
+}
+.qsearch-results:empty{display:none;}
+.qsr-item{
+  display:block;width:100%;text-align:right;border:0;background:none;color:var(--ink);
+  padding:.65rem .9rem;cursor:pointer;border-bottom:1px solid var(--rule);font-family:"Manrope";
+}
+.qsr-item:last-child{border-bottom:0;}
+.qsr-item:hover{background:var(--paper-raised-2);}
+.qsr-item .qsr-surah{font-size:.68rem;color:var(--ink-faint);display:block;margin-top:.2rem;}
+.qsr-item .qsr-ar{font-family:"Amiri Quran","Amiri",serif;font-size:1rem;}
+
+.surahlist{display:flex;flex-direction:column;gap:.5rem;}
+.surahrow{
+  display:flex;align-items:center;gap:.75rem;background:var(--paper-raised);border:1px solid var(--rule);
+  border-radius:.9rem;padding:.7rem .9rem;cursor:pointer;text-align:right;font:inherit;color:var(--ink);width:100%;
+}
+.surahrow:hover{border-color:var(--rule-strong);}
+.surahnum{
+  flex:none;width:2.1rem;height:2.1rem;border-radius:50%;border:1px solid var(--rule-strong);
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;
+}
+.surahinfo{flex:1;min-width:0;}
+.surahname-ar{font-family:"Amiri Quran","Amiri",serif;font-size:1.15rem;}
+.surahname-en{font-size:.68rem;color:var(--ink-faint);margin-top:.1rem;direction:ltr;}
+.surahmeta{flex:none;font-size:.66rem;color:var(--ink-faint);direction:ltr;}
+
+.qreader-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  padding:.9rem 0;position:sticky;top:0;background:var(--paper);z-index:4;border-bottom:1px solid var(--rule);margin-bottom:1rem;
+}
+.backbtn{
+  border:1px solid var(--rule-strong);background:var(--paper-raised);color:var(--ink-soft);
+  border-radius:999px;padding:.45rem .85rem;font-size:.76rem;font-weight:700;cursor:pointer;
+}
+.qreader-title{text-align:center;flex:1;min-width:0;}
+.qreader-title-ar{display:block;font-family:"Amiri",serif;font-weight:700;font-size:1rem;}
+.qreader-title-en{display:block;font-size:.66rem;color:var(--ink-faint);direction:ltr;}
+.fontstep{display:inline-flex;align-items:center;border:1px solid var(--rule-strong);border-radius:999px;overflow:hidden;flex:none;}
+.fontstep button{background:var(--paper-raised);border:0;padding:.4rem .6rem;cursor:pointer;font-weight:800;color:var(--ink-soft);}
+.fontstep span{padding:0 .4rem;font-size:.62rem;color:var(--ink-faint);font-weight:700;}
+
+.qbismillah{text-align:center;font-family:"Amiri Quran","Amiri",serif;font-size:1.3rem;color:var(--accent);margin:0 0 1.3rem;}
+.ayahblock{display:flex;gap:.7rem;padding:.9rem 0;border-bottom:1px dashed var(--rule);scroll-margin-top:5rem;}
+.ayahnum{
+  flex:none;width:1.9rem;height:1.9rem;border-radius:50%;border:1px solid var(--rule-strong);
+  display:flex;align-items:center;justify-content:center;font-size:.64rem;font-weight:800;color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;margin-top:.1rem;
+}
+.ayahtext{
+  flex:1;min-width:0;font-family:"Amiri Quran","Amiri",serif;text-align:right;
+  font-size:var(--quran-size,1.65rem);line-height:2.25;color:var(--ink);
+}
+.ayahtext mark{background:var(--accent);color:#fff;border-radius:.2rem;padding:0 .1rem;}
+
+.emptylist{text-align:center;color:var(--ink-faint);font-size:.85rem;padding:2rem 1rem;}
+
+footer{margin-top:2.4rem;text-align:center;font-size:.68rem;color:var(--ink-faint);line-height:1.7;}
+footer a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:2px;}
+@media (prefers-reduced-motion:reduce){ * { scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="list-view">
+    <header class="pageh">
+      <h1 class="pageh-ar">القرآن الكريم</h1>
+      <p class="pageh-en">The Noble Quran — a simple reader</p>
+      <p class="pageh-note">Looking for Tafsir, favorites, or Quran audio? Those live in the <a href="/#quran" style="color:var(--accent)">full Sabah &amp; Masaa app</a>.</p>
+    </header>
+
+    <div class="qsearch">
+      <input type="text" id="quran-search" class="qsearch-input" placeholder="ابحث عن سورة أو آية… (search a surah or ayah)" autocomplete="off">
+      <div class="qsearch-results" id="quran-search-results"></div>
+    </div>
+
+    <div class="surahlist" id="surahlist">
+      <p class="emptylist">Loading the Quran…</p>
+    </div>
+  </div>
+
+  <div id="reader-view" hidden>
+    <div class="qreader-topbar">
+      <button type="button" class="backbtn" id="back-btn">← السور</button>
+      <div class="qreader-title">
+        <span class="qreader-title-ar" id="reader-surah-ar">—</span>
+        <span class="qreader-title-en" id="reader-surah-en">—</span>
+      </div>
+      <div class="fontstep" aria-label="Text size">
+        <button type="button" id="size-smaller" aria-label="Smaller text">–</button>
+        <span>أ</span>
+        <button type="button" id="size-bigger" aria-label="Larger text">+</button>
+      </div>
+    </div>
+    <div id="reader-body"></div>
+  </div>
+
+  <footer>
+    Quran text: Uthmani script, via Quran.com. Please verify wording against a trusted muṣḥaf before teaching or publishing further.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STATE = { chapters: null, verses: null };
+
+  function normalizeArabic(s){
+    // Strip tashkeel/diacritics + normalize alef/ya/tatweel variants. The
+    // Uthmani script uses Alef Wasla (ٱ) constantly — without mapping it to
+    // plain alef, most searches (e.g. "الرحمن") miss nearly every match.
+    return (s || "")
+      .replace(/[ً-ٰٟۖ-ۭ]/g, "")
+      .replace(/ـ/g, "")
+      .replace(/[إأآٱا]/g, "ا")
+      .replace(/ى/g, "ي")
+      .replace(/ة/g, "ه")
+      .trim();
+  }
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; });
+  }
+
+  function loadData(){
+    return Promise.all([
+      fetch("/data/chapters.json").then(function(r){ return r.json(); }),
+      fetch("/data/quran-uthmani.json").then(function(r){ return r.json(); })
+    ]).then(function(res){
+      STATE.chapters = res[0];
+      STATE.verses = res[1];
+    });
+  }
+  function chapterById(id){
+    return STATE.chapters.filter(function(c){ return c.id === id; })[0];
+  }
+
+  function renderSurahList(){
+    var wrap = document.getElementById("surahlist");
+    wrap.innerHTML = "";
+    STATE.chapters.forEach(function(ch){
+      var row = document.createElement("button");
+      row.type = "button";
+      row.className = "surahrow";
+      row.innerHTML =
+        '<span class="surahnum">' + ch.id + '</span>' +
+        '<span class="surahinfo"><span class="surahname-ar">' + ch.nameAr + '</span><span class="surahname-en">' + ch.nameTranslatedEn + ' · ' + ch.nameSimple + '</span></span>' +
+        '<span class="surahmeta">' + ch.versesCount + ' ayat</span>';
+      row.addEventListener("click", function(){ openSurah(ch.id); });
+      wrap.appendChild(row);
+    });
+  }
+
+  var searchTimer = null;
+  document.getElementById("quran-search").addEventListener("input", function(){
+    var q = this.value.trim();
+    clearTimeout(searchTimer);
+    var resultsEl = document.getElementById("quran-search-results");
+    if (q.length < 2) { resultsEl.innerHTML = ""; return; }
+    searchTimer = setTimeout(function(){ runSearch(q, resultsEl); }, 200);
+  });
+  function runSearch(query, resultsEl){
+    var nq = normalizeArabic(query);
+    var results = [];
+
+    STATE.chapters.forEach(function(ch){
+      if (normalizeArabic(ch.nameAr).indexOf(nq) !== -1 || ch.nameTranslatedEn.toLowerCase().indexOf(query.toLowerCase()) !== -1 || ch.nameSimple.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
+        results.push({ type: "surah", chapterId: ch.id });
+      }
+    });
+
+    if (nq.length >= 2) {
+      var count = 0;
+      for (var key in STATE.verses) {
+        if (count >= 25) break;
+        if (normalizeArabic(STATE.verses[key]).indexOf(nq) !== -1) { results.push({ type: "ayah", verseKey: key }); count++; }
+      }
+    }
+
+    resultsEl.innerHTML = "";
+    if (!results.length) {
+      resultsEl.innerHTML = '<div class="qsr-item">No matches. Try a different spelling.</div>';
+      return;
+    }
+    results.slice(0, 30).forEach(function(r){
+      var item = document.createElement("button");
+      item.type = "button";
+      item.className = "qsr-item";
+      if (r.type === "surah") {
+        var ch = chapterById(r.chapterId);
+        item.innerHTML = '<span class="qsr-ar">' + ch.nameAr + '</span><span class="qsr-surah">' + ch.nameTranslatedEn + ' · ' + ch.versesCount + ' ayat</span>';
+        item.addEventListener("click", function(){ openSurah(r.chapterId); resultsEl.innerHTML = ""; document.getElementById("quran-search").value = ""; });
+      } else {
+        var chId = parseInt(r.verseKey.split(":")[0], 10);
+        var ch2 = chapterById(chId);
+        item.innerHTML = '<span class="qsr-ar">' + STATE.verses[r.verseKey] + '</span><span class="qsr-surah">' + (ch2 ? ch2.nameAr : "") + ' · آية ' + r.verseKey.split(":")[1] + '</span>';
+        item.addEventListener("click", function(){ openSurah(chId, r.verseKey); resultsEl.innerHTML = ""; document.getElementById("quran-search").value = ""; });
+      }
+      resultsEl.appendChild(item);
+    });
+  }
+
+  var fontSize = 1.65;
+  function applySize(){ document.documentElement.style.setProperty("--quran-size", fontSize + "rem"); }
+  document.getElementById("size-bigger").addEventListener("click", function(){
+    fontSize = Math.min(2.6, +(fontSize + 0.1).toFixed(2)); applySize();
+  });
+  document.getElementById("size-smaller").addEventListener("click", function(){
+    fontSize = Math.max(1.2, +(fontSize - 0.1).toFixed(2)); applySize();
+  });
+
+  function openSurah(chapterId, scrollToVerseKey){
+    var ch = chapterById(chapterId);
+    document.getElementById("list-view").hidden = true;
+    document.getElementById("reader-view").hidden = false;
+    document.getElementById("reader-surah-ar").textContent = ch.nameAr;
+    document.getElementById("reader-surah-en").textContent = ch.nameTranslatedEn + " · " + ch.nameSimple;
+
+    var body = document.getElementById("reader-body");
+    body.innerHTML = "";
+    if (ch.bismillahPre) {
+      var b = document.createElement("p");
+      b.className = "qbismillah";
+      b.textContent = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+      body.appendChild(b);
+    }
+    for (var i = 1; i <= ch.versesCount; i++) {
+      var verseKey = chapterId + ":" + i;
+      var text = STATE.verses[verseKey];
+      if (!text) continue;
+      var block = document.createElement("div");
+      block.className = "ayahblock";
+      block.id = "ayah-" + verseKey.replace(":", "-");
+      block.innerHTML =
+        '<div class="ayahnum">' + i + '</div>' +
+        '<p class="ayahtext">' + escapeHtml(text) + '</p>';
+      body.appendChild(block);
+    }
+
+    if (scrollToVerseKey) {
+      requestAnimationFrame(function(){
+        var el = document.getElementById("ayah-" + scrollToVerseKey.replace(":", "-"));
+        if (el) el.scrollIntoView({behavior:"smooth", block:"center"});
+      });
+    } else {
+      window.scrollTo({top: 0, behavior: "instant"});
+    }
+  }
+
+  document.getElementById("back-btn").addEventListener("click", function(){
+    document.getElementById("reader-view").hidden = true;
+    document.getElementById("list-view").hidden = false;
+  });
+
+  loadData().then(function(){
+    renderSurahList();
+  }).catch(function(){
+    document.getElementById("surahlist").innerHTML = '<p class="emptylist">Couldn\'t load the Quran text. Check your connection and reload the page.</p>';
+  });
+})();
+</script>
+</body>
+</html>

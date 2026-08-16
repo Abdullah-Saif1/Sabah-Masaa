@@ -2007,13 +2007,16 @@ var Q = {
 };
 
 function normalizeArabic(s){
-  // Strip tashkeel/diacritics + normalize alef/ya variants for forgiving search.
+  // Strip tashkeel/diacritics + normalize alef/ya/tatweel variants for
+  // forgiving search. The Uthmani script uses Alef Wasla (ٱ) constantly —
+  // without mapping it to plain alef, most searches (e.g. "الرحمن") miss
+  // nearly every real match in the text.
   return (s || "")
-    .replace(/[ً-ٰٟۖ-ۭ]/g, "")
-    .replace(/[إأآا]/g, "ا")
+    .replace(/[ً-ٰٟۖ-ۭ]/g, "")
+    .replace(/ـ/g, "")
+    .replace(/[إأآٱا]/g, "ا")
     .replace(/ى/g, "ي")
     .replace(/ة/g, "ه")
-    .replace(/[ًٌٍَُِّْ]/g, "")
     .trim();
 }
 
