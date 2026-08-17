@@ -12,10 +12,14 @@ function fetchJSON(url) {
   return new Promise((resolve, reject) => {
     https.get(url, { headers: { "User-Agent": "sabah-masaa-build-script" } }, (res) => {
       if (res.statusCode !== 200) { reject(new Error(url + " -> " + res.statusCode)); return; }
-      let data = "";
-      res.on("data", (c) => (data += c));
+      // Accumulate raw Buffer chunks and decode once (see fetch-quran-data.js
+      // for why: per-chunk string decoding corrupts multi-byte characters
+      // split across a chunk boundary). This endpoint's payload is numeric
+      // only today, but keep the safe pattern consistent everywhere.
+      const chunks = [];
+      res.on("data", (c) => chunks.push(c));
       res.on("end", () => {
-        try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
+        try { resolve(JSON.parse(Buffer.concat(chunks).toString("utf8"))); } catch (e) { reject(e); }
       });
     }).on("error", reject);
   });

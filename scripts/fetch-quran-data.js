@@ -13,10 +13,15 @@ function fetchJSON(url) {
   return new Promise((resolve, reject) => {
     https.get(url, { headers: { "User-Agent": "sabah-masaa-build-script" } }, (res) => {
       if (res.statusCode !== 200) { reject(new Error(url + " -> " + res.statusCode)); return; }
-      let data = "";
-      res.on("data", (c) => (data += c));
+      // Accumulate raw Buffer chunks and decode once at the end. Decoding
+      // each chunk to a string independently (the previous `data += chunk`
+      // pattern) corrupts any multi-byte UTF-8 character that happens to
+      // fall across a chunk boundary -- this silently mangled ~80 ayat of
+      // Arabic text into U+FFFD replacement characters last time.
+      const chunks = [];
+      res.on("data", (c) => chunks.push(c));
       res.on("end", () => {
-        try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
+        try { resolve(JSON.parse(Buffer.concat(chunks).toString("utf8"))); } catch (e) { reject(e); }
       });
     }).on("error", reject);
   });
