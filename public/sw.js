@@ -1,12 +1,13 @@
-// App-shell cache for offline use. HTML pages (this app's shell, plus the
-// standalone Quran reader) are served network-first, so a fix shipped from
-// the server reaches the user on their very next load instead of getting
-// stuck behind a stale cache indefinitely -- the cache for these is only a
-// fallback for when the network is unavailable. Static assets (fonts,
-// bundled Quran data, icons) rarely change and are served cache-first for
-// speed and reliable offline use; /api/* is always network-only so sync
+// App-shell cache for offline use. Only truly-immutable assets (fonts,
+// icons -- files whose bytes never change once published) are served
+// cache-first. Everything else -- HTML pages, bundled Quran data,
+// manifest, vendor JS -- is network-first: always try the network for the
+// latest version, falling back to cache only when genuinely offline. This
+// matters for correctness, not just freshness: quran-uthmani.json holds
+// the actual Quranic text, and a stale cached copy of it is a silent data
+// bug, not just an outdated page. /api/* is always network-only so sync
 // and push subscriptions stay live.
-const CACHE_NAME = "sabah-masaa-v2";
+const CACHE_NAME = "sabah-masaa-v3";
 const SHELL = [
   "/",
   "/index.html",
@@ -60,10 +61,12 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
-function isHtmlRequest(request, url) {
-  if (request.mode === "navigate") return true;
-  if (request.destination === "document") return true;
-  return url.pathname === "/" || url.pathname.endsWith(".html");
+// Only assets whose bytes are truly fixed for a given filename: web fonts
+// and app icons. If a font or icon ever needs to change, it should ship
+// under a new filename -- don't add anything here that might need an
+// in-place content fix later.
+function isImmutableAsset(url) {
+  return url.pathname.startsWith("/fonts/") || url.pathname.startsWith("/icons/");
 }
 
 self.addEventListener("fetch", (event) => {
@@ -71,36 +74,33 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (url.pathname.startsWith("/api/")) return; // never cache sync/push calls
 
-  if (isHtmlRequest(event.request, url)) {
-    // Network-first: always try to get the latest page. Only fall back to
-    // whatever's cached if the network is genuinely unreachable (offline).
+  if (isImmutableAsset(url)) {
     event.respondWith(
-      fetch(event.request)
-        .then((response) => {
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(event.request).then((response) => {
           if (response && response.status === 200) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           }
           return response;
-        })
-        .catch(() => caches.match(event.request))
+        });
+      })
     );
     return;
   }
 
-  // Cache-first for static assets: fonts, bundled Quran data, icons, vendor JS.
+  // Network-first for everything else: HTML pages, bundled Quran/prayer
+  // data, manifest, vendor JS. Only falls back to cache when offline.
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
